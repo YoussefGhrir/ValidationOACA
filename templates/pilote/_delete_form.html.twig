@@ -1,0 +1,6 @@
+{# fichier pilote/_delete_form.html.twig #}
+
+<form method="post" action="{{ path('app_pilote_delete', {'id': pilote.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce pilote ?');" style="display:inline;">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pilote.id) }}">
+    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+</form>

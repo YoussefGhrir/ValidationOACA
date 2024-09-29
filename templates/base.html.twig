@@ -1,17 +1,292 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>OACA autorisation</title>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('design/css/msg.css') }}">
+        <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
+        <!-- Flatpickr CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+        <!-- Favicon -->
+        <link rel="icon" href="{{ asset('design/images/1200x630wa.ico') }}" type="image/x-icon">
+
+        <!-- Stylesheets -->
+        <link href="{{ asset('design/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/bootstrap.min.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/animate.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/icons.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/sidebar-menu.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/app-style.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/custom-styles.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/style.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/erreur.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('design/css/pdf.css') }}" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% endblock %}
+</head>
+<body class="bg-theme bg-theme1" style="overflow: hidden; , font-weight: bold;">
+
+<!-- Start Wrapper -->
+<div id="wrapper">
+
+    <!-- Start Sidebar -->
+    <div id="sidebar-wrapper" data-simplebar="" data-simplebar-auto-hide="true">
+        <div class="brand-logo">
+            <a href="{{ path('app_home') }}">
+                <img src="{{ asset('design/images/logo-icon.png') }}" class="logo-icon" alt="logo icon"
+                     style="width: 100px; height: 100px; border-radius: 30%; margin-top: 10px;">
+                <h5 class="logo-text" style="font-weight: bold; border-bottom: 2px solid #3498DB;">GESTION
+                    VALIDATION</h5>
+            </a>
+        </div>
+        <div style="margin-top: 125px;">
+            {% if is_granted('ROLE_USER') %}
+            <ul class="sidebar-menu do-nicescrol" style="overflow-y: auto; max-height: 500px;">
+                <li class="sidebar-header underline-blue">PILOTES</li>
+                <li><a href="{{ path('app_pilote_new') }}" target="_self"><i class="zmdi zmdi-format-list-bulleted"></i>
+                        <span>Ajouter Pilote</span></a>
+                </li>
+                <li><a href="{{ path('app_pilote_atpl') }}" target="_self"><i class="zmdi zmdi-account-circle"></i>
+                        <span>ATPL</span></a></li>
+                <li><a href="{{ path('app_pilote_cpl') }}" target="_self"><i class="zmdi zmdi-account-circle"></i>
+                        <span>CPL</span></a>
+                </li>
+                <li><a href="{{ path('app_pilote_double') }}" target="_self"><i class="zmdi zmdi-account-circle"></i>
+                        <span>DOUBLE</span></a></li>
+                <li class="sidebar-header underline-blue">AUTORISATION</li>
+                <li><a href="#" target="_self"><i class="zmdi zmdi-grid"></i> <span>Autorisations</span>
+                        <small class="badge float-right badge-light">PDF</small></a>
+                </li>
+                <li class="sidebar-header underline-blue">AUTRES</li>
+                <li><a href="{{ path('app_home') }}" target="_self"><i class="zmdi zmdi-view-dashboard"></i> <span>Statistique</span></a>
+                </li>
+                <li><a href="{{ path('app_avion_index') }}" target="_self"><i
+                                class="zmdi zmdi-format-list-bulleted"></i>
+                        <span>Avion</span></a></li>
+                <li><a href="{{ path('app_compagnie_index') }}" target="_self"><i
+                                class="zmdi zmdi-format-list-bulleted"></i>
+                        <span>Compagnie</span></a></li>
+                <li><a href="{{ path('app_avion_index') }}" target="_self"><i
+                                class="zmdi zmdi-format-list-bulleted"></i>
+                        <span>Directeur</span></a></li>
+                <li><a href="{{ path('app_ministere_index') }}" target="_self"><i
+                                class="zmdi zmdi-format-list-bulleted"></i>
+                        <span>Ministére</span></a></li>
+                <li><a href="{{ path('profile_show') }}" target="_self"><i class="zmdi zmdi-face"></i>
+                        <span>Profil</span></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <!-- Start Topbar -->
+    <header class="topbar-nav">
+        <nav class="navbar navbar-expand fixed-top">
+            <!-- Left Side -->
+            <ul class="navbar-nav mr-auto align-items-center">
+                <!-- Menu Toggle -->
+            </ul>
+
+            <!-- Right Side -->
+            <ul class="navbar-nav align-items-center right-nav-link">
+                <li>
+                    <button id="zoom-in" class="btn zoom-btn" style="background-color: #4CAF50; color: white;">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button id="zoom-out" class="btn zoom-btn" style="background-color: #FF6347; color: white;">
+                        <i class="fas fa-search-minus"></i>
+                    </li>
+                <!-- User Profile -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
+                            <span class="user-profile">
+                                <img src="{{ asset('design/images/user-icon.png') }}" class="img-circle"
+                                     alt="user avatar">
+                            </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li class="dropdown-item user-details">
+                            <a href="javascript:void(0);">
+                                <div class="media">
+                                    <div class="avatar"></div>
+                                    <div class="media-body">
+                                        {% if app.user %}
+                                            <div class="user-info">
+                                                <h6 class="mt-2 user-title">{{ app.user.firstname }} {{ app.user.lastname }}</h6>
+                                                <p class="user-subtitle">{{ app.user.email }}</p>
+                                            </div>
+                                        {% else %}
+                                            <h6 class="mt-2 user-title">Utilisateur invité</h6>
+                                            <p class="user-subtitle">Email non disponible</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+
+                        {% if app.user %}
+                            <li class="dropdown-divider"></li>
+                            <li class="dropdown-item"><a href="{{ path('profile_show') }}" class="logout-link"><i
+                                            class="icon-settings mr-2"></i> Profil</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+
+                <!-- Connection Status -->
+                <li class="nav-item">
+                    {% if app.user %}
+                        <a href="{{ path('app_logout') }}" class="nav-link">
+                            <i class="zmdi zmdi-power"></i>
+                            <span>Déconnexion</span>
+                            <span class="status-indicator connected"></span>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="nav-link">
+                            <i class="zmdi zmdi-lock"></i>
+                            <span>Connexion</span>
+                            <span class="status-indicator disconnected"></span>
+                        </a>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+    <!-- End Topbar -->
+
+    <div class="clearfix"></div>
+    <!-- Start Content Wrapper -->
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <!-- Conditional Display of Moving Message -->
+            {% if current_route() == 'app_home' %}
+                <div class="moving-message">
+                    <span>BIENVENUE AU GESTION DES VALIDATIONS DES PILOTES</span>
+                </div>
+            {% endif %}
+
+
+            <div id="content-to-zoom">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <!-- End Content Wrapper -->
+
+    <!-- Start Back To Top Button -->
+    <a href="javascript:void(0);" class="back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <!-- End Back To Top Button -->
+
+    <!-- Start Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="text-center copyright-text" style="font-weight: bold;">
+                &copy; <span id="currentYear"></span> OACA. Tous droits réservés.
+            </div>
+
+            <script>
+                document.getElementById('currentYear').textContent = new Date().getFullYear();
+            </script>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+
+</div>
+<!-- End Wrapper -->
+
+{% block javascripts %}
+    <!-- jQuery - Chargé à partir de CDN pour une meilleure performance avec un fallback local -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="{{ asset('assets/js/jquery.min.js') }}"><\/script>')
+    </script>
+
+    <!-- Bootstrap JS - Chargé à partir de CDN avec fallback local -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        if (typeof ($.fn.modal) === 'undefined') {
+            document.write('<script src="{{ asset('assets/js/bootstrap.min.js') }}"><\/script>');
+        }
+    </script>
+
+    <!-- Popper.js - requis pour Bootstrap -->
+    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
+
+    <!-- Flatpickr Initialization -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr('.datepicker', {
+                dateFormat: 'Y-m-d',  // Format de la date compatible avec Symfony
+                allowInput: true,     // Permettre la saisie manuelle via le clavier
+                locale: 'fr'          // Localisation en français
+            });
+        });
+    </script>
+
+    <!-- Flash Message Handling -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const flashMessages = document.querySelectorAll('.flash-message');
+                flashMessages.forEach((message) => {
+                    message.classList.add('fade');
+                    setTimeout(() => {
+                        message.remove();
+                    }, 200); // Time for CSS transition
+                });
+            }, 2000); // Time before hiding the message (2000ms = 2 seconds)
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let zoomLevel = 1;
+            const zoomStep = 0.1;
+            const maxZoom = 2;  // Zoom maximum (200%)
+            const minZoom = 0.5; // Zoom minimum (50%)
+            const contentToZoom = document.getElementById('content-to-zoom');
+            const zoomInBtn = document.getElementById('zoom-in');
+            const zoomOutBtn = document.getElementById('zoom-out');
+
+            // Fonction pour appliquer le zoom avec centrage
+            function applyZoom() {
+                contentToZoom.style.transform = `scale(${zoomLevel})`;
+                contentToZoom.style.transformOrigin = 'center center'; // Zoomer depuis le centre
+            }
+
+            // Événement pour le bouton Zoom avant
+            zoomInBtn.addEventListener('click', function () {
+                if (zoomLevel < maxZoom) {
+                    zoomLevel += zoomStep;
+                    applyZoom();
+                }
+            });
+
+            // Événement pour le bouton Zoom arrière
+            zoomOutBtn.addEventListener('click', function () {
+                if (zoomLevel > minZoom) {
+                    zoomLevel -= zoomStep;
+                    applyZoom();
+                }
+            });
+
+            // Initialiser le zoom à 100%
+            applyZoom();
+        });
+    </script>
+
+{% endblock %}
+</body>
 </html>

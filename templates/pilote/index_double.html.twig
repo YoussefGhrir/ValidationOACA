@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <main id="main" class="main">
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card shadow-lg p-3 mb-5 bg-light rounded">
+                        <div class="card-body">
+                            <!-- Card Title -->
+                            <h5 class="card-title text-center mb-4" style="color: #171616; font-weight: bold;">LISTE DES PILOTES DOUBLE</h5>
+
+                            <!-- Search and Filter Form -->
+                            <form id="searchForm" class="mb-4">
+                                <div class="row align-items-end">
+                                    <div class="col-md-2">
+                                        <input type="text" id="numeroSearch" class="form-control" placeholder="Rechercher par numéro">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" id="nomSearch" class="form-control" placeholder="Rechercher par nom">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" id="prenomSearch" class="form-control" placeholder="Rechercher par prénom">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="date" id="dateFilter" class="form-control datepicker form-control-custom" placeholder="Filtrer par 1ère délivrance">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" id="resetFilter" class="btn bg-warning">
+                                            <i class="bi bi-arrow-clockwise"></i> <!-- Icône de réinitialisation -->
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Table Container -->
+                            <div class="table-wrapper" style="max-height: 400px; overflow-y: auto;">
+                                <table class="table table-striped table-hover table-bordered">
+                                    <!-- Fixed Table Head -->
+                                    <thead style="background-color: #6A5ACD; color: white; position: sticky; top: 0; z-index: 10;">
+                                    <tr>
+                                        <th scope="col">Numéro</th>
+                                        <th scope="col">Fonction</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Prénom</th>
+                                        <th scope="col">Pays</th>
+                                        <th scope="col">1ère Délivration</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <!-- Scrollable Table Body -->
+                                    <tbody id="pilotesTable">
+                                    {% for pilote in pilotes %}
+                                        <tr>
+                                            <td class="numero">{{ pilote.numero }}</td>
+                                            <td>{{ pilote.fonction }}</td>
+                                            <td class="nom">{{ pilote.nom }}</td>
+                                            <td class="prenom">{{ pilote.prenom }}</td>
+                                            <td>{{ pilote.pays }}</td>
+                                            <td class="firstdate">{{ pilote.firstdate|date('Y-m-d') }}</td>
+                                            <td>
+                                                <a href="{{ path('pilote_generate_pdf', {id: pilote.id}) }}" class="btn btn-dark btn-sm">PDF</a>
+                                                <a href="{{ path('app_pilote_show', {'id': pilote.id}) }}" class="btn btn-info btn-sm">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a href="{{ path('app_pilote_edit', {'id': pilote.id}) }}" class="btn btn-primary btn-sm">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+
+                                                <form action="{{ path('app_pilote_delete', {'id': pilote.id}) }}" method="post" style="display:inline;">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pilote.id) }}">
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce pilote ?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">Aucun pilote double trouvé</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const numeroSearch = document.getElementById('numeroSearch');
+            const nomSearch = document.getElementById('nomSearch');
+            const prenomSearch = document.getElementById('prenomSearch');
+            const dateFilter = document.getElementById('dateFilter');
+            const resetFilter = document.getElementById('resetFilter');
+            const pilotesTable = document.getElementById('pilotesTable');
+            const rows = pilotesTable.querySelectorAll('tr');
+
+            // Fonction pour filtrer les résultats en fonction des critères
+            function filterPilotes() {
+                const numeroValue = numeroSearch.value.toLowerCase();
+                const nomValue = nomSearch.value.toLowerCase();
+                const prenomValue = prenomSearch.value.toLowerCase();
+                const dateValue = dateFilter.value;
+
+                rows.forEach(row => {
+                    const numero = row.querySelector('.numero') ? row.querySelector('.numero').textContent.toLowerCase() : '';
+                    const nom = row.querySelector('.nom') ? row.querySelector('.nom').textContent.toLowerCase() : '';
+                    const prenom = row.querySelector('.prenom') ? row.querySelector('.prenom').textContent.toLowerCase() : '';
+                    const firstDate = row.querySelector('.firstdate') ? row.querySelector('.firstdate').textContent : '';
+
+                    // Vérifier si les critères correspondent
+                    const numeroMatch = numero.includes(numeroValue);
+                    const nomMatch = nom.includes(nomValue);
+                    const prenomMatch = prenom.includes(prenomValue);
+                    const dateMatch = !dateValue || firstDate === dateValue;
+
+                    // Afficher ou masquer la ligne en fonction des critères
+                    if (numeroMatch && nomMatch && prenomMatch && dateMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            // Filtrage lorsque l'utilisateur tape dans les champs de recherche
+            numeroSearch.addEventListener('input', filterPilotes);
+            nomSearch.addEventListener('input', filterPilotes);
+            prenomSearch.addEventListener('input', filterPilotes);
+            dateFilter.addEventListener('input', filterPilotes);
+
+            // Réinitialiser les filtres
+            resetFilter.addEventListener('click', function () {
+                numeroSearch.value = '';
+                nomSearch.value = '';
+                prenomSearch.value = '';
+                dateFilter.value = '';
+                filterPilotes();
+            });
+        });
+    </script>
+{% endblock %}

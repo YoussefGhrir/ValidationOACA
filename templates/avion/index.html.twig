@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="card shadow-lg p-3 mb-5 bg-light rounded">
+        <div class="card-body">
+            <!-- Titre centré de la carte -->
+            <h5 class="card-title text-center mb-4" style="color: #171616; font-weight: bold;">LISTE DES AVIONS</h5>
+
+            <!-- Conteneur de la table centré -->
+            <div class="d-flex justify-content-center">
+                <div class="table-wrapper" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-striped table-hover table-bordered">
+                        <!-- En-tête fixe de la table -->
+                        <thead style="background-color: #6A5ACD; color: white; position: sticky; top: 0; z-index: 10;">
+                        <tr>
+                            <th scope="col">Type d'Avion</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <!-- Corps de la table avec un contenu défilable -->
+                        <tbody>
+                        {% for avion in avions %}
+                            <tr>
+                                <td>{{ avion.nom }}</td>
+                                <td class="text-center">
+                                    <!-- Boutons centrés dans la colonne des actions -->
+                                    <a href="{{ path('app_avion_edit', {'id': avion.id}) }}" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i> Modifier
+                                    </a>
+                                    <form action="{{ path('app_avion_delete', {'id': avion.id}) }}" method="post" style="display:inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avion.id) }}">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet avion ?')">
+                                            <i class="bi bi-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center">Aucun avion trouvé</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bouton pour créer un nouvel avion, centré sous la table -->
+            <div class="text-center mt-3">
+                <a href="{{ path('app_avion_new') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Créer un nouvel avion
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

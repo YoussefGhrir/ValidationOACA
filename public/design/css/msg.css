@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e0f7fa; /* Light sky blue background */
+    margin: 0;
+    padding: 0;
+}
+
+.moving-message {
+    display: block;
+    width: 100%; /* Full-width */
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden; /* Hide the overflow */
+    background: linear-gradient(90deg, #4a90e2, #357ab7); /* Gradient representing the sky */
+    color: #fff; /* White text color */
+    padding: 15px 0; /* Vertical padding */
+    font-weight: bold;
+    position: relative;
+}
+
+.moving-message::before {
+    content: "✈️ "; /* Airplane emoji */
+    font-size: 20px;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.moving-message::after {
+    content: " ✈️";
+    font-size: 20px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@keyframes move {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.moving-message span {
+    display: inline-block;
+    animation: move 10s linear infinite;
+}

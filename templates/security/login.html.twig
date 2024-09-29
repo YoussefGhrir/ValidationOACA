@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Se Connecter
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('assets/css/pace.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('assets/css/animate.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('assets/css/app-style.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <!-- Message de bienvenue -->
+    <div class="moving-message">
+        <span>BIENVENUE AU GESTION DES VALIDATION DES PILOTES</span>
+    </div>
+
+    <main id="main" class="main">
+        <!-- Start wrapper-->
+        <div id="wrapper">
+            <div class="card card-authentication1 mx-auto my-5">
+                <div class="card-body">
+                    <div class="card-content p-2">
+                        <div class="text-center">
+                            <img src="{{ asset('design/images/logo-icon.png') }}" class="logo-icon" alt="logo icon"
+                                 style="width: 80px; height: 80px; border-radius:30%; margin-bottom: 20px;">
+                        </div>
+                        <div class="text-center">
+                            <div class="card-title text-uppercase py-3">Se Connecter</div>
+                        </div>
+
+                        <form method="post" action="{{ path('app_login') }}">
+                            {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                                </div>
+                            {% endif %}
+
+                            {% if app.user %}
+                                <div class="mb-3">
+                                    Vous êtes connecté en tant que {{ app.user.userIdentifier }},
+                                    <a href="{{ path('app_logout') }}">Déconnexion</a>
+                                </div>
+                            {% endif %}
+
+                            <div class="form-group">
+                                <label for="inputEmail" class="sr-only">Email</label>
+                                <div class="position-relative has-icon-right">
+                                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
+                                           class="form-control input-shadow" autocomplete="email" required autofocus
+                                           placeholder="Entrer Email">
+                                    <div class="form-control-position">
+                                        <i class="icon-envelope"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputPassword" class="sr-only">Mot de passe</label>
+                                <div class="position-relative has-icon-right">
+                                    <input type="password" name="password" id="inputPassword"
+                                           class="form-control input-shadow" autocomplete="current-password" required
+                                           placeholder="Entrer mot de passe">
+                                    <div class="form-control-position">
+                                        <i class="icon-lock"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <div class="icheck-material-white">
+                                        <input type="checkbox" id="user-checkbox" name="_remember_me">
+                                        <label for="user-checkbox">Mémoriser</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-light btn-block">Se connecter !</button>
+
+                            <div id="login-response" class="text-center mt-3"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><!--wrapper-->
+    </main>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+{% endblock %}

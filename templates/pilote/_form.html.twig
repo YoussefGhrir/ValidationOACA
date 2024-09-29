@@ -1,0 +1,27 @@
+{{ form_start(form) }}
+
+<div class="form-group">
+    {{ form_label(form.type, 'Type de pilote', {'attr': {'class': 'form-label'}}) }}
+    <div class="custom-radio-group">
+        {{ form_widget(form.type, {
+            'attr': {'class': 'form-radio-input'}
+        }) }}
+    </div>
+    {{ form_errors(form.type) }}
+</div>
+
+<!-- Rendre les autres champs du formulaire ici -->
+{{ form_widget(form.nom) }}
+{{ form_widget(form.prenom) }}
+{{ form_widget(form.datebirth) }}
+{{ form_widget(form.numero) }}
+{{ form_widget(form.firstdate) }}
+{{ form_widget(form.validite) }}
+{{ form_widget(form.datemedical) }}
+{{ form_widget(form.datelangue) }}
+{{ form_widget(form.pays) }}
+{{ form_widget(form.nationalite) }}
+
+<button class="btn">{{ button_label|default('Save') }}</button>
+
+{{ form_end(form) }}

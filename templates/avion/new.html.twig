@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Avion{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <!-- Affichage des messages flashs -->
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show flash-message" role="alert">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <h1>Create new Avion</h1>
+
+    {{ include('avion/_form.html.twig') }}
+
+    <a href="{{ path('app_avion_index') }}">back to list</a>
+{% endblock %}

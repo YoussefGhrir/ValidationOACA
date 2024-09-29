@@ -1,0 +1,203 @@
+/* Style général pour le groupe de boutons radio */
+.custom-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Espacement entre les boutons radio */
+}
+
+/* Style pour chaque bouton radio */
+.custom-radio-group .form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem; /* Espacement entre les options des boutons radio augmenté */
+}
+
+/* Style pour les boutons radio personnalisés */
+.custom-radio-group input[type="radio"] {
+    appearance: none; /* Supprimer l'apparence par défaut */
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #7d6c6c; /* Bordure du bouton radio */
+    background-color: #ffffff;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s; /* Transition douce */
+}
+
+/* Cercle sélectionné */
+.custom-radio-group input[type="radio"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #2889a7; /* Couleur de l'élément sélectionné */
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2); /* Ombre légère pour l'élément sélectionné */
+}
+
+/* Style pour le label associé */
+.custom-radio-group label {
+    font-size: 16px;
+    color: #fdf000; /* Couleur du texte en blanc */
+    cursor: pointer; /* Curseur pointer pour l'interaction */
+    transition: color 0.3s; /* Transition douce */
+}
+
+/* Couleur du label quand le bouton radio est sélectionné */
+.custom-radio-group input[type="radio"]:checked + label {
+    color: #f8efef; /* Couleur du label quand sélectionné */
+}
+/* Ajoutez une marge à chaque label pour plus d'espacement */
+.custom-radio-group label {
+    margin-right: 5rem; /* Ajustez la marge selon vos besoins */
+}
+/* Animation sur le bouton radio au survol */
+.custom-radio-group input[type="radio"]:hover {
+    border-color: #5a6268; /* Couleur de bordure au survol */
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); /* Ombre légère au survol */
+}
+
+/* custom.css */
+
+.table {
+    width: 100%;
+    table-layout: auto; /* Adjusts column widths automatically */
+}
+
+.table th, .table td {
+    padding: 15px; /* Increases padding inside cells */
+}
+
+.table-responsive {
+    overflow-x: auto; /* Ensures the table is scrollable on small screens */
+}
+
+.table {
+    font-size: 1.1rem; /* Increases font size for better readability */
+}
+/* custom.css */
+.card {
+    width: 100%; /* Assure que la carte utilise toute la largeur de son conteneur */
+    max-width: 100%; /* Évite toute restriction de largeur maximale */
+    margin: 0 auto; /* Centre la carte dans son conteneur */
+}
+
+.card-body {
+    padding: 2rem; /* Augmente l'espace intérieur de la carte */
+}
+
+.table {
+    font-size: 1rem; /* Augmente la taille du texte dans le tableau */
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    white-space: nowrap; /* Empêche le retour à la ligne dans les cellules */
+}
+
+.table-responsive {
+    overflow-x: auto; /* Ajoute une barre de défilement horizontale si nécessaire */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1;
+}
+
+
+.footer {
+    padding: 0; /* Remove unnecessary padding from the footer */
+}
+.container {
+    padding: 0; /* Remove unnecessary padding from the container */
+}
+.copyright-text {
+    font-size: 10px; /* Smaller font size for compactness */
+    line-height: 1.1; /* Tight line height */
+    padding: 4px 0; /* Minimal padding */
+    color: #555; /* Soft gray text color */
+    text-align: center; /* Center the text */
+    background-color: #f8f9fa; /* Light gray background */
+    border-top: 1px solid #ddd; /* Subtle top border */
+    margin: 0; /* Remove default margin */
+}
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+.connected {
+    background-color: green;
+}
+.disconnected {
+    background-color: red;
+}
+.landscape-card {
+    /* Ajustez la largeur et le style de la carte */
+    width: 100%;
+    max-width: 1000px; /* Largeur maximale de la carte */
+    border-radius: 15px; /* Coins arrondis */
+    overflow: hidden; /* Évite le débordement du contenu */
+}
+    .card-body {
+        padding: 20px; /* Espacement interne */
+    }
+/* Add this to your custom CSS file */
+.flash-message {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.flash-message .btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+.connected {
+    background-color: green;
+}
+.disconnected {
+    background-color: red;
+}

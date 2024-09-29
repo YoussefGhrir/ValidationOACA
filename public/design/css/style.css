@@ -1,0 +1,19 @@
+/* Fichier: public/css/styles.css */
+
+/* Autres styles existants... */
+
+.underline-blue {
+    text-decoration: underline;
+    text-decoration-color: blue; /* Couleur du soulignement */
+    text-decoration-thickness: 2px; /* Épaisseur du soulignement (optionnel) */
+}
+/* Initial state of the menu */
+.menu {
+    display: none; /* Hide menu by default */
+}
+
+/* When the menu is active */
+.menu.active {
+    display: block; /* Show the menu */
+}
+

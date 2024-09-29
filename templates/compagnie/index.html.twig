@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Compagnie index{% endblock %}
+
+{% block body %}
+    <div class="card shadow-lg p-3 mb-5 bg-light rounded">
+        <div class="card-body">
+            <!-- Titre de la carte centré -->
+            <h5 class="card-title text-center mb-4" style="color: #171616; font-weight: bold;">LISTE DES COMPAGNIES</h5>
+
+            <!-- Conteneur de la table avec défilement -->
+            <div class="d-flex justify-content-center">
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-striped table-hover table-bordered text-center">
+                        <!-- En-tête de la table avec une position fixe -->
+                        <thead style="background-color: #6A5ACD; color: white; position: sticky; top: 0; z-index: 10;">
+                        <tr>
+                            <th scope="col">Nom du Compagnie</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <!-- Corps de la table -->
+                        <tbody>
+                        {% for compagnie in compagnies %}
+                            <tr>
+                                <td>{{ compagnie.nom }}</td>
+                                <td class="text-center">
+                                    <!-- Boutons "Modifier" et "Supprimer" centrés -->
+                                    <a href="{{ path('app_compagnie_edit', {'id': compagnie.id}) }}" class="btn btn-primary btn-sm mx-1">
+                                        <i class="bi bi-pencil-square"></i> Modifier
+                                    </a>
+                                    <form action="{{ path('app_compagnie_delete', {'id': compagnie.id}) }}" method="post" style="display:inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ compagnie.id) }}">
+                                        <button type="submit" class="btn btn-danger btn-sm mx-1" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette compagnie ?')">
+                                            <i class="bi bi-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center">Aucune compagnie trouvée</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bouton pour créer une nouvelle compagnie centré -->
+            <div class="text-center mt-3">
+                <a href="{{ path('app_compagnie_new') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Créer une nouvelle compagnie
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

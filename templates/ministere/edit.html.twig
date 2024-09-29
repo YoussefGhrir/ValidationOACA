@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <style>
+        .alert {
+            transition: opacity 1s ease-out;
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+
+        /* Style pour centrer le label "Nom du Ministère" */
+        .form-label-centered {
+            display: flex;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <!-- Affichage des messages flash -->
+                {% for label, messages in app.flashes %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show flash-message" role="alert">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Modifier le Ministère</h2>
+
+                        {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3"> <!-- Centrer la colonne du formulaire -->
+                                <!-- Formulaire, première colonne -->
+                                <div class="form-group mb-3">
+                                    <!-- Centrer le label avec la classe personnalisée -->
+                                    <label class="form-label-centered" for="ministere_nom">Nom du Ministère</label>
+                                    {{ form_widget(form.nom, {
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="row mt-4">
+                            <div class="col d-flex justify-content-between">
+                                <button type="submit" class="btn btn-success btn-lg">Mettre à jour</button>
+                                <a href="{{ path('app_ministere_index') }}" class="btn btn-warning btn-lg">Retour à la liste</a>
+
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

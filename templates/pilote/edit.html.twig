@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <style>
+        .alert {
+            transition: opacity 1s ease-out;
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <!-- Affichage des messages flashs -->
+                {% for label, messages in app.flashes %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show flash-message" role="alert">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="card mt-4">
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Form Fields in Left Column -->
+                                <div class="form-group mb-3 custom-radio-group">
+                                    {{ form_row(form.type, {
+                                        'label': 'Nature de Licence',
+                                        'attr': {'class': 'form-control form-control-custom'},
+                                        'value': pilote.getTypeLabel()
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.fonction, {
+                                        'label': 'Fonction à Bord',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.numero, {
+                                        'label': 'Numéro',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.nom, {
+                                        'label': 'Nom',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.prenom, {
+                                        'label': 'Prénom',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.datebirth, {
+                                        'label': 'Date de naissance',
+                                        'attr': {'class': 'form-control datepicker form-control-custom'},
+                                        'value': form.datebirth.vars.value ? form.datebirth.vars.value|date('Y-m-d') : ''
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.avion, {'label': 'Avion', 'attr': {'class': 'form-control form-control-custom'}}) }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Form Fields in Right Column -->
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.nationalite, {
+                                        'label': 'Nationalité',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.pays, {
+                                        'label': 'Pays',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.firstdate, {
+                                        'label': '1ère Délivration',
+                                        'attr': {'class': 'form-control datepicker form-control-custom'},
+                                        'value': form.firstdate.vars.value ? form.firstdate.vars.value|date('Y-m-d') : ''
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.validite, {
+                                        'label': 'Délivrée le',
+                                        'attr': {'class': 'form-control datepicker form-control-custom'},
+                                        'value': form.validite.vars.value ? form.validite.vars.value|date('Y-m-d') : ''
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.datequalif, {
+                                        'label': 'Date Qualification',
+                                        'attr': {'class': 'form-control datepicker form-control-custom'},
+                                        'value': form.datequalif.vars.value ? form.datequalif.vars.value|date('Y-m-d') : ''
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.datelangue, {
+                                        'label': 'Date de langue',
+                                        'attr': {'class': 'form-control datepicker form-control-custom'},
+                                        'value': form.datelangue.vars.value ? form.datelangue.vars.value|date('Y-m-d') : ''
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.compagnie, {'label': 'Compagnie', 'attr': {'class': 'form-control form-control-custom'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col d-flex justify-content-between">
+                                <button type="submit" class="btn btn-success btn-lg">Mettre à jour</button>
+                                <a href="{{ path('app_home') }}" class="btn btn-warning btn-lg">Retour à la page
+                                    d'accueil</a>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr(".datepicker", {
+                dateFormat: "Y-m-d",  // Format de la date
+                allowInput: true,      // Permettre la saisie manuelle
+                clickOpens: true       // Le calendrier s'ouvre en cliquant (ne bloque pas la saisie)
+            });
+        });
+    </script>
+{% endblock %}
