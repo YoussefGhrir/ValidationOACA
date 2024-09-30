@@ -65,6 +65,9 @@ class Pilote
     #[ORM\ManyToOne(inversedBy: 'pilotes')]
     private ?Avion $avion = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $pdfNumber = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -273,6 +276,18 @@ class Pilote
     public function setAvion(?Avion $avion): self
     {
         $this->avion = $avion;
+        return $this;
+    }
+
+    public function getPdfNumber(): ?int
+    {
+        return $this->pdfNumber;
+    }
+
+    public function setPdfNumber(?int $pdfNumber): static
+    {
+        $this->pdfNumber = $pdfNumber;
+
         return $this;
     }
 

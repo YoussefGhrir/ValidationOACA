@@ -61,8 +61,8 @@
                 </li>
                 <li><a href="{{ path('app_pilote_double') }}" target="_self"><i class="zmdi zmdi-account-circle"></i>
                         <span>DOUBLE</span></a></li>
-                <li class="sidebar-header underline-blue">AUTORISATION</li>
-                <li><a href="#" target="_self"><i class="zmdi zmdi-grid"></i> <span>Autorisations</span>
+                <li class="sidebar-header underline-blue">GESTION ADMIN</li>
+                <li><a href="{{ path('app_register') }}" target="_self"><i class="zmdi zmdi-grid"></i> <span>ajouter Admin</span>
                         <small class="badge float-right badge-light">PDF</small></a>
                 </li>
                 <li class="sidebar-header underline-blue">AUTRES</li>
@@ -74,7 +74,7 @@
                 <li><a href="{{ path('app_compagnie_index') }}" target="_self"><i
                                 class="zmdi zmdi-format-list-bulleted"></i>
                         <span>Compagnie</span></a></li>
-                <li><a href="{{ path('app_avion_index') }}" target="_self"><i
+                <li><a href="{{ path('app_directeur_index') }}" target="_self"><i
                                 class="zmdi zmdi-format-list-bulleted"></i>
                         <span>Directeur</span></a></li>
                 <li><a href="{{ path('app_ministere_index') }}" target="_self"><i
@@ -104,7 +104,8 @@
                     </button>
                     <button id="zoom-out" class="btn zoom-btn" style="background-color: #FF6347; color: white;">
                         <i class="fas fa-search-minus"></i>
-                    </li>
+                    </button>
+                </li>
                 <!-- User Profile -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
@@ -167,6 +168,20 @@
     <!-- Start Content Wrapper -->
     <div class="content-wrapper">
         <div class="container-fluid">
+            <!-- Start Flash Messages Section -->
+            {% for label, messages in app.flashes %}
+                <div class="custom-flash-message alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+            <!-- End Flash Messages Section -->
+
+
             <!-- Conditional Display of Moving Message -->
             {% if current_route() == 'app_home' %}
                 <div class="moving-message">
@@ -206,6 +221,21 @@
 <!-- End Wrapper -->
 
 {% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>// Flash Message Handling: Automatically dismiss after 3 seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const flashMessages = document.querySelectorAll('.custom-flash-message');
+                flashMessages.forEach((message) => {
+                    message.classList.remove('show');
+                    setTimeout(() => {
+                        message.remove();
+                    }, 500); // Time for CSS transition
+                });
+            }, 3000); // Message disappears after 3 seconds (3000ms)
+        });
+    </script>
     <!-- jQuery - Chargé à partir de CDN pour une meilleure performance avec un fallback local -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

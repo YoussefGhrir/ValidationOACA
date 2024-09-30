@@ -36,22 +36,28 @@
                     </div>
                 {% endfor %}
 
-                <!-- Carte de création d'un avion -->
+                <!-- Carte de création du directeur -->
                 <div class="card mt-4">
                     <div class="card-body">
-                        <h2 class="text-center mb-4">Créer un nouvel Avion</h2>
+                        <h2 class="text-center mb-4">Création du Directeur</h2>
 
                         {{ form_start(form) }}
                         <div class="row">
                             <div class="col-md-6 offset-md-3">
                                 <!-- Colonne du formulaire -->
+
                                 <div class="form-group mb-3">
-                                    <label class="form-label-centered" for="avion_nom">Nom de l'Avion</label>
+                                    <label class="form-label-centered" for="directeur_nom">Fonction du Directeur</label>
+                                    {{ form_widget(form.fonction, {
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label-centered" for="directeur_nom">Nom du Directeur</label>
                                     {{ form_widget(form.nom, {
                                         'attr': {'class': 'form-control form-control-custom'}
                                     }) }}
                                 </div>
-
                             </div>
                         </div>
 
@@ -59,7 +65,7 @@
                         <div class="row mt-4">
                             <div class="col d-flex justify-content-between">
                                 <button type="submit" class="btn btn-success btn-lg">Créer</button>
-                                <a href="{{ path('app_avion_index') }}" class="btn btn-warning btn-lg">Retour à la liste</a>
+                                <a href="{{ path('app_directeur_index') }}" class="btn btn-warning btn-lg">Retour à la liste</a>
                             </div>
                         </div>
                         {{ form_end(form) }}

@@ -139,12 +139,16 @@ class PiloteController extends AbstractController
     #[Route('/pilote/generate-pdf/{id}', name: 'pilote_generate_pdf')]
     public function generatePdf(Pilote $pilote, PdfGenerator $pdfGenerator): Response
     {
-        // Vérifiez que le pilote a bien sélectionné une compagnie et un avion
-        if (!$pilote->getCompagnie() || !$pilote->getAvion()) {
-            throw $this->createNotFoundException('Le pilote n\'a pas sélectionné de compagnie ou d\'avion.');
+        // Vérification que le pilote a bien sélectionné une compagnie et un avion
+        if (!$pilote->getCompagnie()) {
+            throw $this->createNotFoundException('Le pilote n\'a pas sélectionné de compagnie.');
         }
 
-        // Préparer les données à passer au template
+        if (!$pilote->getAvion()) {
+            throw $this->createNotFoundException('Le pilote n\'a pas sélectionné d\'avion.');
+        }
+
+        // Préparation des données à passer au template
         $data = [
             'pilote' => $pilote,
             'compagnie' => $pilote->getCompagnie(),
@@ -152,6 +156,6 @@ class PiloteController extends AbstractController
         ];
 
         // Générer le PDF avec les données du pilote, de la compagnie, et de l'avion
-        return $pdfGenerator->generatePdf('pdf/pdf_template.html.twig', $data);
+        return $pdfGenerator->generatePdf($pilote, 'pdf/pdf_template.html.twig', $data);
     }
 }

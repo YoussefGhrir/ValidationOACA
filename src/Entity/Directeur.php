@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\DirecteurRepository;
@@ -31,7 +30,8 @@ class Directeur
 
     public function setNom(?string $nom): static
     {
-        $this->nom = $nom;
+        // Convertir le nom en majuscules avant de le stocker
+        $this->nom = $nom !== null ? strtoupper($nom) : null;
 
         return $this;
     }
@@ -43,7 +43,8 @@ class Directeur
 
     public function setFonction(?string $fonction): static
     {
-        $this->fonction = $fonction;
+        // Convertir la fonction en majuscules avant de la stocker
+        $this->fonction = $fonction !== null ? strtoupper($fonction) : null;
 
         return $this;
     }

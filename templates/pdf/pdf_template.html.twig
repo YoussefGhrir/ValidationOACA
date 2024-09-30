@@ -71,8 +71,9 @@
 <p style="text-align:center; line-height:150%; font-size:18pt">
     <strong><em><span style="font-variant:small-caps">t e</span></em></strong><strong><em><span style="font-variant:small-caps">&#xa0; </span></em></strong><strong><em><span style="font-variant:small-caps">m</span></em></strong><strong><em><span style="font-variant:small-caps">&#xa0; </span></em></strong><strong><em><span style="font-variant:small-caps">p o r a r y</span></em></strong><strong><em><span style="font-variant:small-caps">&#xa0;&#xa0; </span></em></strong><strong><em><span style="font-variant:small-caps">a u t h o r i z a t i o n</span></em></strong>
 </p>
+
 <p style="text-align:center; font-size:16pt">
-    <strong><em><span style="font-variant:small-caps">N° ..............</span></em></strong>
+    <strong><em><span style="font-variant:small-caps">N° {{ numero_pdf }}/{{ current_year }}</span></em></strong>
 </p>
 <p style="text-align:center; font-size:16pt">
     <strong><span style="font-family:'Bookman Old Style',serif; font-variant:small-caps">&#xa0;</span></strong>
@@ -199,6 +200,7 @@
     &#xa0;
 </p>
 
+
 <p style="font-size:14pt">
     <strong><span style="font-size:13pt; ">Délivrée le</span></strong><strong><span style="font-size:13pt; ">&#xa0;</span></strong><span style="font-size:13pt; ">: {{ pilote.validite ? pilote.validite|date('d/m/Y') : '' }}</span><strong><span style="width:19.22pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="font-size:13pt; ">Valide jusqu’au</span></strong><strong><span style="font-size:13pt; ">&#xa0;</span></strong><strong><span style="font-size:13pt; ">: </span></strong>30/01/2022<strong><span style="width:13.89pt; font-size:13pt; display:inline-block">&#xa0;</span></strong>
 </p>
@@ -218,13 +220,17 @@
     <strong><span style="font-family:'Bookman Old Style',serif; text-transform:uppercase">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span></strong>
 </p>
 <p style="text-align:center; font-size:13pt">
-    <strong><span style="font-family:'Bookman Old Style',serif; text-transform:uppercase">Airworthiness Director</span></strong>
+    <strong><span style="font-family:'Bookman Old Style',serif; text-transform:uppercase">{% for directeur in directeurs %}
+            {{ directeur.fonction }}<br>
+            {% endfor %}</span></strong>
 </p>
 <p style="text-align:center; font-size:13pt">
     <strong><span style="font-family:'Bookman Old Style',serif; ">&#xa0;</span></strong>
 </p>
 <p style="text-align:center; font-size:13pt">
-    <strong><span style="font-family:'Bookman Old Style',serif; text-transform:uppercase">Anis BEN HADJ NASR</span></strong>
+    <strong><span style="font-family:'Bookman Old Style',serif; text-transform:uppercase">{% for directeur in directeurs %}
+            {{ directeur.nom }}<br>
+            {% endfor %}</span></strong>
 </p>
 <p style="text-align:right">
     &#xa0;

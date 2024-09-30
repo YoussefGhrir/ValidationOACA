@@ -1,11 +1,74 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Compagnie{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
+    <style>
+        .alert {
+            transition: opacity 1s ease-out;
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+
+        /* Centrer le label */
+        .form-label-centered {
+            text-align: center;
+            display: block;
+            width: 100%;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Compagnie</h1>
+    {{ parent() }}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <!-- Affichage des messages flashs -->
+                {% for label, messages in app.flashes %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show flash-message" role="alert">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
 
-    {{ include('compagnie/_form.html.twig') }}
+                <!-- Carte de création de la compagnie -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Créer une nouvelle Compagnie</h2>
 
-    <a href="{{ path('app_compagnie_index') }}">back to list</a>
+                        {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <!-- Colonne du formulaire -->
+                                <div class="form-group mb-3">
+                                    <label class="form-label-centered" for="compagnie_nom">Nom de la Compagnie</label>
+                                    {{ form_widget(form.nom, {
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'actions -->
+                        <div class="row mt-4">
+                            <div class="col d-flex justify-content-between">
+                                <button type="submit" class="btn btn-success btn-lg">Créer</button>
+                                <a href="{{ path('app_compagnie_index') }}" class="btn btn-warning btn-lg">Retour à la liste</a>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}
