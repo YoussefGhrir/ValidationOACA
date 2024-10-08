@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr-FR">
 <head>
+    <style>
+        @font-face {
+            font-family: 'DejaVu Sans';
+            src: url('{{ asset('fonts/DejaVuSans.ttf') }}') format('truetype');
+        }
+
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+        }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
     <title>
@@ -116,7 +126,7 @@
 </p>
 
 <p style="font-size:14pt">
-    <strong><span style="font-size:13pt; ">Numéro</span></strong><strong><span style="width:25.31pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="font-size:13pt; ">:</span></strong><strong><span style="font-size:13pt; ">&#xa0;&#xa0;&#xa0; </span></strong>{{ pilote.numero }}<span style="width:32.47pt; display:inline-block">&#xa0;</span><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><span style="width:35.4pt; display:inline-block">&#xa0;</span><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span><span style="font-size:13pt">&#xa0;&#xa0; </span><span style="width:25.65pt; font-size:13pt; display:inline-block">&#xa0;</span> <strong><span style="font-size:13pt; ">Valide jusqu’au</span></strong><strong><span style="font-size:13pt; ">&#xa0;</span></strong><strong><span style="font-size:13pt; ">: </span></strong><span style="font-size:13pt">30/01/2022</span>
+    <strong><span style="font-size:13pt; ">Numéro</span></strong><strong><span style="width:25.31pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="font-size:13pt; ">:</span></strong><strong><span style="font-size:13pt; ">&#xa0;&#xa0;&#xa0; </span></strong>{{ pilote.numero }}<span style="width:32.47pt; display:inline-block">&#xa0;</span><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><span style="width:35.4pt; display:inline-block">&#xa0;</span><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span><span style="font-size:13pt">&#xa0;&#xa0; </span><span style="width:25.65pt; font-size:13pt; display:inline-block">&#xa0;</span> <strong><span style="font-size:13pt; ">Valide jusqu’au</span></strong><strong><span style="font-size:13pt; ">&#xa0;</span></strong><strong><span style="font-size:13pt; ">: </span></strong><span style="font-size:13pt">{{ valide_jusquau }}</span>
 </p>
 <p style="font-size:13pt">
     <em>(Number) </em><em><span style="width:17pt; display:inline-block">&#xa0;</span></em><em><span style="width:35.4pt; display:inline-block">&#xa0;</span></em><em><span style="width:35.4pt; display:inline-block">&#xa0;</span></em><em><span style="width:35.4pt; display:inline-block">&#xa0;</span></em><em><span style="width:35.4pt; display:inline-block">&#xa0;</span></em><em><span style="width:35.4pt; display:inline-block">&#xa0;</span></em><em><span style="width:35.4pt; display:inline-block">&#xa0;</span></em><em>&#xa0;&#xa0; </em><em><span style="width:25.65pt; display:inline-block">&#xa0;</span></em><em> (Valid until)</em><em>&#xa0;</em>
@@ -124,20 +134,18 @@
 <p style="font-size:13pt">
     <strong>&#xa0;</strong>
 </p>
-<p style="text-align:justify; font-size:13pt">
+<p style="font-family: DejaVu Sans,serif">
     <strong>Fonction à bord :</strong><strong><span style="width:6.53pt; display:inline-block">&#xa0;</span></strong>
 
     <!-- Condition for "Double / Dual" -->
     <strong>Double</strong>
     <strong><span style="font-family:'Bookman Old Style',serif;">/</span></strong><em>Dual</em>
     <strong>
-        <span style="font-family:Wingdings,serif;">
-            {% if pilote.fonction == 'Double / Dual' %}
-                 <!-- Checked box for Double/Dual -->
-            {% else %}
-                 <!-- Unchecked box -->
-            {% endif %}
-        </span>
+        {% if pilote.fonction == 'Double / Dual' %}
+            &#x2611; <!-- Unicode symbol for checked box (☑) -->
+        {% else %}
+            &#x2610; <!-- Unicode symbol for unchecked box (☐) -->
+        {% endif %}
     </strong>
 
     <!-- Spacing -->
@@ -147,13 +155,11 @@
     <strong>1</strong><strong><span style="font-size:8.67pt;"><sup>er</sup></span></strong><strong> pilote </strong>
     <strong><span style="font-family:'Bookman Old Style',serif;">/</span></strong><em>PIC</em>
     <strong>
-        <span style="font-family:Wingdings,serif;">
-            {% if pilote.fonction == '1er pilote / PIC' %}
-                 <!-- Checked box for 1er pilote / PIC -->
-            {% else %}
-                 <!-- Unchecked box -->
-            {% endif %}
-        </span>
+        {% if pilote.fonction == '1er pilote / PIC' %}
+            &#x2611; <!-- Checked box (☑) -->
+        {% else %}
+            &#x2610; <!-- Unchecked box (☐) -->
+        {% endif %}
     </strong>
 
     <!-- Spacing -->
@@ -163,13 +169,11 @@
     <strong>2</strong><strong><span style="font-size:8.67pt;"><sup>ème</sup></span></strong><strong> pilote </strong>
     <strong><span style="font-family:'Bookman Old Style',serif;">/</span></strong><em>Co-pilot</em>
     <strong>
-        <span style="font-family:Wingdings,serif;">
-            {% if pilote.fonction == '2ème pilote / Co-pilot' %}
-                 <!-- Checked box for 2ème pilote / Co-pilot -->
-            {% else %}
-                 <!-- Unchecked box -->
-            {% endif %}
-        </span>
+        {% if pilote.fonction == '2ème pilote / Co-pilot' %}
+            &#x2611; <!-- Checked box (☑) -->
+        {% else %}
+            &#x2610; <!-- Unchecked box (☐) -->
+        {% endif %}
     </strong>
 </p>
 
@@ -202,7 +206,7 @@
 
 
 <p style="font-size:14pt">
-    <strong><span style="font-size:13pt; ">Délivrée le</span></strong><strong><span style="font-size:13pt; ">&#xa0;</span></strong><span style="font-size:13pt; ">: {{ pilote.validite ? pilote.validite|date('d/m/Y') : '' }}</span><strong><span style="width:19.22pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="font-size:13pt; ">Valide jusqu’au</span></strong><strong><span style="font-size:13pt; ">&#xa0;</span></strong><strong><span style="font-size:13pt; ">: </span></strong>30/01/2022<strong><span style="width:13.89pt; font-size:13pt; display:inline-block">&#xa0;</span></strong>
+    <strong><span style="font-size:13pt; ">Délivrée le</span></strong><strong><span style="font-size:13pt; ">&#xa0;</span></strong><span style="font-size:13pt; ">: {{ pilote.validite ? pilote.validite|date('d/m/Y') : '' }}</span><strong><span style="width:19.22pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span style="font-size:13pt; ">Valide jusqu’au</span></strong><strong><span style="font-size:13pt; ">&#xa0;</span></strong><strong><span style="font-size:13pt; ">: </span></strong>{{ valide_jusquau }}<strong><span style="width:13.89pt; font-size:13pt; display:inline-block">&#xa0;</span></strong>
 </p>
 <p style="text-align:justify; font-size:13pt">
     <em>(issued on)</em><em>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </em><em><span style="width:33.69pt; display:inline-block">&#xa0;</span></em><em>(Valid until)</em><em>&#xa0;</em>

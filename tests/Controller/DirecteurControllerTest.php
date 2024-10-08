@@ -3,7 +3,6 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Directeur;
-use App\Repository\DirecteurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;

@@ -11,6 +11,7 @@
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('design/css/msg.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
+        <link rel="stylesheet" href="{{ asset('design/css/icons.css') }}">
         <!-- Flatpickr CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -24,7 +25,6 @@
         <link href="{{ asset('design/css/icons.css') }}" rel="stylesheet"/>
         <link href="{{ asset('design/css/sidebar-menu.css') }}" rel="stylesheet"/>
         <link href="{{ asset('design/css/app-style.css') }}" rel="stylesheet"/>
-        <link href="{{ asset('design/css/custom-styles.css') }}" rel="stylesheet"/>
         <link href="{{ asset('design/css/style.css') }}" rel="stylesheet"/>
         <link href="{{ asset('design/css/erreur.css') }}" rel="stylesheet"/>
         <link href="{{ asset('design/css/pdf.css') }}" rel="stylesheet"/>
@@ -249,9 +249,6 @@
             document.write('<script src="{{ asset('assets/js/bootstrap.min.js') }}"><\/script>');
         }
     </script>
-
-    <!-- Popper.js - requis pour Bootstrap -->
-    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
 
     <!-- Flatpickr Initialization -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

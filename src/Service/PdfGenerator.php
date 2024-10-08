@@ -96,11 +96,28 @@ class PdfGenerator
         $data['numero_pdf'] = $formattedCounter;
         $data['current_year'] = $year;
 
+        // Comparer les deux dates (datelangue et datequalif) pour obtenir la date la plus petite
+        $datelangue = $pilote->getDatelangue();
+        $datequalif = $pilote->getDatequalif();
+
+        if ($datelangue && $datequalif) {
+            // Comparer les deux dates et choisir la plus ancienne
+            $dateValideJusquAu = $datelangue < $datequalif ? $datelangue : $datequalif;
+        } elseif ($datelangue) {
+            $dateValideJusquAu = $datelangue;
+        } elseif ($datequalif) {
+            $dateValideJusquAu = $datequalif;
+        } else {
+            $dateValideJusquAu = null; // Si aucune des deux dates n'est définie
+        }
+
+        // Ajouter la date minimale au template (formatée si nécessaire)
+        $data['valide_jusquau'] = $dateValideJusquAu ? $dateValideJusquAu->format('d/m/Y') : 'Non défini';
+
         // Configurer Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', true);
-
+        $options->set('isRemoteEnabled', true); // S'assurer que les ressources externes (polices, images) sont chargées correctement
         $dompdf = new Dompdf($options);
 
         // Charger le template Twig
@@ -113,13 +130,20 @@ class PdfGenerator
         // Rendre le PDF
         $dompdf->render();
 
+        // Générer le nom de fichier basé sur le type et le nom du pilote
+        $type = strtoupper($pilote->getType()); // Assume 'getType' returns 'ATPL', 'CPL', etc.
+        $name = ucfirst($pilote->getNom());    // Assume 'getNom' returns the pilot's name
+
+        // Format the filename with the type and name
+        $filename = sprintf('%s-%s.pdf', $type, $name);
+
         // Sortie du PDF
         $pdfOutput = $dompdf->output();
 
-        // Retourner le PDF comme réponse
+        // Retourner le PDF comme réponse avec le nom de fichier dynamique
         return new Response($pdfOutput, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="document.pdf"',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
     }
 }

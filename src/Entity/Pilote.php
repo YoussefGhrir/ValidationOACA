@@ -68,6 +68,15 @@ class Pilote
     #[ORM\Column(nullable: true)]
     private ?int $pdfNumber = null;
 
+    #[ORM\Column]
+    private ?bool $status = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $privilegefr = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $privilegeag = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,7 +130,9 @@ class Pilote
 
     public function setNumero(?string $numero): static
     {
-        $this->numero = $numero;
+        // Convertir le numéro en majuscules
+        $this->numero = $numero !== null ? strtoupper($numero) : null;
+
         return $this;
     }
 
@@ -287,6 +298,42 @@ class Pilote
     public function setPdfNumber(?int $pdfNumber): static
     {
         $this->pdfNumber = $pdfNumber;
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPrivilegefr(): ?string
+    {
+        return $this->privilegefr;
+    }
+
+    public function setPrivilegefr(?string $privilegefr): static
+    {
+        $this->privilegefr = $privilegefr;
+
+        return $this;
+    }
+
+    public function getPrivilegeag(): ?string
+    {
+        return $this->privilegeag;
+    }
+
+    public function setPrivilegeag(?string $privilegeag): static
+    {
+        $this->privilegeag = $privilegeag;
 
         return $this;
     }
