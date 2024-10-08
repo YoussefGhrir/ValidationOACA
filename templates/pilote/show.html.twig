@@ -47,6 +47,10 @@
                                                 <th scope="row">Avion</th>
                                                 <td>{{ pilote.avion.nom }}</td>
                                             </tr>
+                                            <tr>
+                                                <th scope="row">Privilége Français</th>
+                                                <td>{{ pilote.privilegefr }}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -82,8 +86,12 @@
                                                 <td>{{ pilote.nationalite }}</td>
                                             </tr>
                                             <tr>
-                                                    <th scope="row">Compagnie</th>
+                                                <th scope="row">Compagnie</th>
                                                 <td>{{ pilote.compagnie.nom }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Privilége Anglais</th>
+                                                <td>{{ pilote.privilegeag }}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -95,15 +103,22 @@
                             <div class="row mt-4">
                                 <div class="col-12 d-flex justify-content-between">
                                     <a href="{{ path('app_pilote_index') }}" class="btn btn-warning btn-lg">
-                                        Retour à la liste
+                                        <i class="fas fa-arrow-left"></i> Retour à la liste
                                     </a>
-                                    <a href="{{ path('app_pilote_edit', {'id': pilote.id}) }}" class="btn btn-secondary btn-lg">
+                                    <a href="{{ path('app_pilote_edit', {'id': pilote.id}) }}"
+                                       class="btn btn-secondary btn-lg">
                                         <i class="bi bi-pencil-square"></i> Modifier
                                     </a>
-                                    <a href="{{ path('pilote_generate_pdf', {id: pilote.id}) }}" class="btn btn-dark btn-sm">PDF</a>
-                                    <form action="{{ path('app_pilote_delete', {'id': pilote.id}) }}" method="post" style="display:inline;">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pilote.id) }}">
-                                        <button type="submit" class="btn btn-danger btn-lg" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce pilote ?')">
+                                    <a href="{{ path('pilote_generate_pdf', {id: pilote.id}) }}"
+                                       class="btn btn-dark btn-lg">
+                                        <i class="fas fa-file-pdf"></i> PDF
+                                    </a>
+                                    <form action="{{ path('app_pilote_delete', {'id': pilote.id}) }}" method="post"
+                                          style="display:inline;">
+                                        <input type="hidden" name="_token"
+                                               value="{{ csrf_token('delete' ~ pilote.id) }}">
+                                        <button type="submit" class="btn btn-danger btn-lg"
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce pilote ?')">
                                             <i class="bi bi-trash"></i> Supprimer
                                         </button>
                                     </form>

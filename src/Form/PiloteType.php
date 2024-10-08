@@ -127,7 +127,23 @@ class PiloteType extends AbstractType
                 'label' => 'Avion',
                 'placeholder' => 'Choisissez un avion',
                 'required' => false,  // Optionnel
-            ]);
+            ])
+        ->add('privilegefr', TextType::class, [
+        'label' => 'Privilège Français',
+        'required' => false, // Le champ est optionnel
+        'attr' => [
+            'class' => 'form-control form-control-custom',
+            'placeholder' => 'Privilège Français',
+        ],
+    ])
+        ->add('privilegeag', TextType::class, [
+            'label' => 'Privilège Anglais',
+            'required' => false, // Le champ est optionnel
+            'attr' => [
+                'class' => 'form-control form-control-custom',
+                'placeholder' => 'Privilège Anglais',
+            ],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

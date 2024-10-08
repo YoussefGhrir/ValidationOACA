@@ -113,7 +113,9 @@ class PdfGenerator
 
         // Ajouter la date minimale au template (formatée si nécessaire)
         $data['valide_jusquau'] = $dateValideJusquAu ? $dateValideJusquAu->format('d/m/Y') : 'Non défini';
-
+        // Ajouter les privilèges au template
+        $data['privilegefr'] = $pilote->getPrivilegefr() ?? '';
+        $data['privilegeag'] = $pilote->getPrivilegeag() ?? '';
         // Configurer Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);

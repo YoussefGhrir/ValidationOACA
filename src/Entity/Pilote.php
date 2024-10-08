@@ -68,9 +68,6 @@ class Pilote
     #[ORM\Column(nullable: true)]
     private ?int $pdfNumber = null;
 
-    #[ORM\Column]
-    private ?bool $status = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $privilegefr = null;
 
@@ -128,7 +125,7 @@ class Pilote
         return $this->numero;
     }
 
-    public function setNumero(?string $numero): static
+    public function setNumero(?String $numero): static
     {
         // Convertir le numéro en majuscules
         $this->numero = $numero !== null ? strtoupper($numero) : null;
@@ -203,15 +200,16 @@ class Pilote
         return $this;
     }
 
-    public function getNationalite(): ?string
-    {
-        return $this->nationalite;
+    // Setter pour nationalite
+    public function setNationalite(string $nationalite): self {
+        // Met la première lettre de chaque mot en majuscule
+        $this->nationalite = ucwords(strtolower($nationalite));
+        return $this;
     }
 
-    public function setNationalite(?string $nationalite): static
-    {
-        $this->nationalite = $nationalite;
-        return $this;
+    // Getter pour nationalite
+    public function getNationalite(): ?string {
+        return $this->nationalite;
     }
 
     public function isType(): ?bool
@@ -302,17 +300,6 @@ class Pilote
         return $this;
     }
 
-    public function isStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(bool $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
 
     public function getPrivilegefr(): ?string
     {

@@ -76,6 +76,12 @@
                                 <div class="form-group mb-3">
                                     {{ form_row(form.avion, {'label': 'Avion', 'attr': {'class': 'form-control form-control-custom'}}) }}
                                 </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.privilegefr, {
+                                        'label': 'Priviléhe français',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -123,15 +129,38 @@
                                 <div class="form-group mb-3">
                                     {{ form_row(form.compagnie, {'label': 'Compagnie', 'attr': {'class': 'form-control form-control-custom'}}) }}
                                 </div>
+                                <div class="form-group mb-3">
+                                    {{ form_row(form.privilegeag, {
+                                        'label': 'Priviléhe anglais',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <div class="col d-flex justify-content-between">
-                                <button type="submit" class="btn btn-success btn-lg">Mettre à jour</button>
-                                <a href="{{ path('app_home') }}" class="btn btn-warning btn-lg">Retour à la page
-                                    d'accueil</a>
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-save"></i> Mettre à jour
+                                </button>
+
+                                {% if pilote.type == false %}
+                                    <a href="{{ path('app_pilote_atpl') }}" class="btn btn-warning btn-lg">
+                                        <i class="fas fa-arrow-left"></i> Retour à la liste ATPL
+                                    </a>
+                                {% elseif pilote.type == true %}
+                                    <a href="{{ path('app_pilote_cpl') }}" class="btn btn-warning btn-lg">
+                                        <i class="fas fa-arrow-left"></i> Retour à la liste CPL
+                                    </a>
+                                {% elseif pilote.type == null %}
+                                    <a href="{{ path('app_pilote_double') }}" class="btn btn-warning btn-lg">
+                                        <i class="fas fa-arrow-left"></i> Retour à la liste DOUBLE
+                                    </a>
+                                {% endif %}
+
                             </div>
                         </div>
+
+
                         {{ form_end(form) }}
                     </div>
                 </div>
