@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Directeur;
+use App\Entity\Ministere;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -32,6 +34,16 @@ UserFixtures extends Fixture
 
         // Persiste et sauvegarde l'utilisateur
         $manager->persist($admin);
+
+        $directeur = new Directeur();
+        $directeur->setNom('ANIS BEN HADJ NASR');
+        $directeur->setFonction('AIRWORTHINESS DIRECTOR');
+        $manager->persist($directeur);
+
+        // Création de quelques ministères
+        $ministere = new Ministere();
+        $ministere->setNom('Ministère du Transport et de la Logistique');
+        $manager->persist($ministere);
         $manager->flush();
     }
 }

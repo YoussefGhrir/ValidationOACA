@@ -105,9 +105,20 @@
                             <!-- Bottom Row: Buttons Aligned with Equal Spacing -->
                             <div class="row mt-4">
                                 <div class="col-12 d-flex justify-content-between">
-                                    <a href="{{ path('app_pilote_index') }}" class="btn btn-warning btn-lg">
-                                        <i class="fas fa-arrow-left"></i> Retour à la liste
-                                    </a>
+                                    {% if pilote.type is same as(false) %}
+                                        <a href="{{ path('app_pilote_atpl') }}" class="btn btn-warning btn-lg">
+                                            <i class="fas fa-arrow-left"></i> Retour à la liste ATPL
+                                        </a>
+                                    {% elseif pilote.type is same as(true) %}
+                                        <a href="{{ path('app_pilote_cpl') }}" class="btn btn-warning btn-lg">
+                                            <i class="fas fa-arrow-left"></i> Retour à la liste CPL
+                                        </a>
+                                    {% elseif pilote.type is null %}
+                                        <a href="{{ path('app_pilote_double') }}" class="btn btn-warning btn-lg">
+                                            <i class="fas fa-arrow-left"></i> Retour à la liste DOUBLE
+                                        </a>
+                                    {% endif %}
+
                                     <a href="{{ path('app_pilote_edit', {'id': pilote.id}) }}"
                                        class="btn btn-secondary btn-lg">
                                         <i class="bi bi-pencil-square"></i> Modifier

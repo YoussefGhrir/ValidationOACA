@@ -3,7 +3,6 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
-
 {% endblock %}
 
 {% block body %}
@@ -45,6 +44,14 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form_row(form.password.second, {'label': 'Confirmer le mot de passe', 'attr': {'class': 'form-control form-control-custom'}}) }}
+                                </div>
+
+                                <!-- Roles selection field -->
+                                <div class="form-group mb-3 custom-radio-group">
+                                    {{ form_row(form.roles, {
+                                        'label': 'Choisir les rôles',
+                                        'attr': {'class': 'form-control form-control-custom'}
+                                    }) }}
                                 </div>
                             </div>
                         </div>

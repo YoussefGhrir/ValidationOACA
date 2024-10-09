@@ -6,6 +6,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,6 +39,16 @@ class UserType extends AbstractType
                     'attr' => ['class' => 'form-control', 'placeholder' => 'Confirmer le mot de passe'],
                 ],
                 'invalid_message' => 'Les champs de mot de passe doivent correspondre.',
+            ])
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Choisir les rôles',
+                'choices' => [
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Utilisateur' => 'ROLE_USER',
+                ],
+                'expanded' => true,  // Renders as checkboxes
+                'multiple' => true,  // Allows selecting multiple roles
+                'attr' => ['class' => 'form-control form-control-custom'],
             ]);
     }
 

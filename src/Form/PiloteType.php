@@ -8,6 +8,7 @@ use App\Validator\UniquePiloteNumero;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -63,6 +64,7 @@ class PiloteType extends AbstractType
                     'placeholder' => 'YYYY-MM-DD'
                 ],
                 'label' => 'Date de début',
+                'data' => (new \DateTime())->format('Y-m-d'), // Conversion en chaîne de caractères
                 'constraints' => $dateConstraints,
             ])
             ->add('validite', TextType::class, [

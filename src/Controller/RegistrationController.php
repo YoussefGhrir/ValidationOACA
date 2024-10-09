@@ -29,23 +29,20 @@ class RegistrationController extends AbstractController
     ): Response {
         // Vérifier si l'utilisateur connecté a le rôle "ROLE_ADMIN"
         if (!$this->isGranted('ROLE_ADMIN')) {
-            // Ajouter un message flash personnalisé pour l'utilisateur non autorisé
-            $this->addFlash('error', 'Vous n\'êtes pas autorisé à accéder à la page d\'administration. Veuillez contacter l\'administrateur.');
-
-            // Rediriger l'utilisateur vers la page d'accueil sans déconnexion ou suppression
-            return $this->redirectToRoute('app_home'); // Remplacez 'app_home' par la route de votre page d'accueil
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à accéder à la page d\'administration.');
+            return $this->redirectToRoute('app_home');
         }
 
-        // Créer un nouvel objet User pour l'inscription d'un autre utilisateur (pas l'utilisateur connecté)
+        // Créer un nouvel utilisateur
         $newUser = new User();
 
-        // Créer le formulaire basé sur RegistrationFormType
+        // Créer le formulaire
         $form = $this->createForm(RegistrationFormType::class, $newUser);
         $form->handleRequest($request);
 
-        // Traiter la soumission du formulaire
+        // Vérifier si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encoder et définir le mot de passe pour le nouvel utilisateur
+            // Encoder le mot de passe
             $newUser->setPassword(
                 $userPasswordHasher->hashPassword(
                     $newUser,
@@ -53,15 +50,17 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            // Sauvegarder le nouvel utilisateur dans la base de données
+            // Récupérer le rôle sélectionné et le convertir en tableau
+            $selectedRole = $form->get('roles')->getData();
+            $newUser->setRoles([$selectedRole]);
+
+            // Sauvegarder l'utilisateur
             $entityManager->persist($newUser);
             $entityManager->flush();
 
-            // Rediriger vers la page de connexion ou autre
             return $this->redirectToRoute('app_login');
         }
 
-        // Rendre le template du formulaire d'inscription
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);

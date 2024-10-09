@@ -18,14 +18,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/pilote')]
 class PiloteController extends AbstractController
 {
-    #[Route('/', name: 'app_pilote_index', methods: ['GET'])]
-    public function index(PiloteRepository $piloteRepository): Response
-    {
-        return $this->render('pilote/index.html.twig', [
-            'pilotes' => $piloteRepository->findAll(),
-        ]);
-    }
-
     #[Route('/ATPL', name: 'app_pilote_atpl', methods: ['GET'])]
     public function atpl(PiloteRepository $piloteRepository): Response
     {
@@ -91,6 +83,7 @@ class PiloteController extends AbstractController
     {
         return $this->render('pilote/show.html.twig', [
             'pilote' => $pilote,
+
         ]);
     }
 
@@ -129,12 +122,27 @@ class PiloteController extends AbstractController
     public function delete(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $pilote->getId(), $request->request->get('_token'))) {
+            // Récupérer le type du pilote avant de le supprimer
+            $piloteType = $pilote->getType();
+
+            // Supprimer le pilote
             $entityManager->remove($pilote);
             $entityManager->flush();
+
+            // Redirection en fonction du type de pilote
+            if ($piloteType === false ) {
+                return $this->redirectToRoute('app_pilote_atpl', [], Response::HTTP_SEE_OTHER);
+            } elseif ($piloteType === true ) {
+                return $this->redirectToRoute('app_pilote_cpl', [], Response::HTTP_SEE_OTHER);
+            } else { // Pour le type 'Double'
+                return $this->redirectToRoute('app_pilote_double', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
+        // Redirection par défaut si le token CSRF est invalide
         return $this->redirectToRoute('app_pilote_index', [], Response::HTTP_SEE_OTHER);
     }
+
 
     #[Route('/pilote/generate-pdf/{id}', name: 'pilote_generate_pdf')]
     public function generatePdf(Pilote $pilote, PdfGenerator $pdfGenerator): Response

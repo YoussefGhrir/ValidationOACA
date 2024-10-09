@@ -96,47 +96,76 @@ class PdfGenerator
         $data['numero_pdf'] = $formattedCounter;
         $data['current_year'] = $year;
 
-        // Comparer les deux dates (datelangue et datequalif) pour obtenir la date la plus petite
+        // Récupérer les dates de qualification et de langue
         $datelangue = $pilote->getDatelangue();
         $datequalif = $pilote->getDatequalif();
+        $firstDate = $pilote->getFirstdate();
 
-        if ($datelangue && $datequalif) {
-            // Comparer les deux dates et choisir la plus ancienne
-            $dateValideJusquAu = $datelangue < $datequalif ? $datelangue : $datequalif;
-        } elseif ($datelangue) {
-            $dateValideJusquAu = $datelangue;
-        } elseif ($datequalif) {
-            $dateValideJusquAu = $datequalif;
+        // Initialiser la date de validité
+        $dateValideJusquAu = null;
+        $isBeyondOneYear = false; // Indicateur pour savoir si les dates dépassent la limite d'un an
+
+        // Si le type est ATPL, appliquer les règles spécifiques
+        if ($pilote->getTypeLabel() === 'ATPL' && $firstDate) {
+            // Date limite pour ATPL : 2 ans après la date de première délivrance
+            $twoYearsAfterFirstDate = (clone $firstDate)->modify('+2 years');
+            $oneYearAfterFirstDate = (clone $firstDate)->modify('+1 year');
+
+            // Si datelangue et datequalif sont toutes les deux après 1 an de firstDate
+            if (
+                ($datelangue && $datelangue > $oneYearAfterFirstDate) &&
+                ($datequalif && $datequalif > $oneYearAfterFirstDate)
+            ) {
+                // Fixer la date de validité à 1 an après la première délivrance
+                $dateValideJusquAu = $oneYearAfterFirstDate;
+                $isBeyondOneYear = true; // Indiquer que les dates ont dépassé la limite d'un an
+            } else {
+                // Sinon, prendre la date la plus proche entre datelangue et datequalif
+                $validDates = array_filter([$datelangue, $datequalif], function ($date) use ($twoYearsAfterFirstDate) {
+                    return $date <= $twoYearsAfterFirstDate;
+                });
+
+                if (!empty($validDates)) {
+                    $dateValideJusquAu = min($validDates);
+                } else {
+                    // Si aucune date n'est valide, on limite à 1 an après la première délivrance
+                    $dateValideJusquAu = $oneYearAfterFirstDate;
+                    $isBeyondOneYear = true; // Indiquer que les dates ont dépassé la limite d'un an
+                }
+            }
         } else {
-            $dateValideJusquAu = null; // Si aucune des deux dates n'est définie
+            // Pour le type CPL ou si le type n'est pas défini, prendre la date la plus ancienne entre datelangue et datequalif
+            if ($datelangue && $datequalif) {
+                $dateValideJusquAu = min($datelangue, $datequalif);
+            } elseif ($datelangue) {
+                $dateValideJusquAu = $datelangue;
+            } elseif ($datequalif) {
+                $dateValideJusquAu = $datequalif;
+            }
         }
 
         // Ajouter la date minimale au template (formatée si nécessaire)
         $data['valide_jusquau'] = $dateValideJusquAu ? $dateValideJusquAu->format('d/m/Y') : 'Non défini';
+        $data['is_beyond_one_year'] = $isBeyondOneYear; // Ajouter l'indicateur au template
+
         // Ajouter les privilèges au template
         $data['privilegefr'] = $pilote->getPrivilegefr() ?? '';
         $data['privilegeag'] = $pilote->getPrivilegeag() ?? '';
+
         // Configurer Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', true); // S'assurer que les ressources externes (polices, images) sont chargées correctement
-        $dompdf = new Dompdf($options);
+        $options->set('isRemoteEnabled', true);
 
-        // Charger le template Twig
+        $dompdf = new Dompdf($options);
         $html = $this->twig->render($template, $data);
         $dompdf->loadHtml($html);
-
-        // Définir la taille du papier et l'orientation
         $dompdf->setPaper('A4', 'portrait');
-
-        // Rendre le PDF
         $dompdf->render();
 
         // Générer le nom de fichier basé sur le type et le nom du pilote
-        $type = strtoupper($pilote->getType()); // Assume 'getType' returns 'ATPL', 'CPL', etc.
-        $name = ucfirst($pilote->getNom());    // Assume 'getNom' returns the pilot's name
-
-        // Format the filename with the type and name
+        $type = strtoupper($pilote->getType());
+        $name = ucfirst($pilote->getNom());
         $filename = sprintf('%s-%s.pdf', $type, $name);
 
         // Sortie du PDF
@@ -148,4 +177,6 @@ class PdfGenerator
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
     }
+
+
 }
