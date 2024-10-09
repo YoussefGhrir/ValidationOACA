@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 class RegistrationController extends AbstractController
 {
     private $security;
@@ -28,11 +27,8 @@ class RegistrationController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager
     ): Response {
-        // Récupérer l'utilisateur connecté
-        $user = $this->security->getUser();
-
-        // Vérifier si l'utilisateur connecté est bien "oaca@gmail.com"
-        if (!$user || $user->getEmail() !== 'oaca@gmail.com') {
+        // Vérifier si l'utilisateur connecté a le rôle "ROLE_ADMIN"
+        if (!$this->isGranted('ROLE_ADMIN')) {
             // Ajouter un message flash personnalisé pour l'utilisateur non autorisé
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à accéder à la page d\'administration. Veuillez contacter l\'administrateur.');
 

@@ -24,7 +24,7 @@ UserFixtures extends Fixture
         $admin->setEmail('oaca@gmail.com');
         $admin->setFirstname('OACA');
         $admin->setLastname('ADMIN');
-        $admin->setRoles(['ROLE_USER']);
+        $admin->setRoles(['ROLE_ADMIN']);
 
         // Hash du mot de passe
         $hashedPassword = $this->passwordHasher->hashPassword($admin, 'oaca2024');

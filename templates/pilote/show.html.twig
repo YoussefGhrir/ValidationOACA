@@ -1,4 +1,7 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
 
 {% block body %}
     <main id="main" class="main">
@@ -131,4 +134,7 @@
             </div>
         </section>
     </main><!-- End #main -->
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}

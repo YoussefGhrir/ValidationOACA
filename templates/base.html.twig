@@ -62,24 +62,26 @@
                 <li><a href="{{ path('app_pilote_double') }}" target="_self"><i class="zmdi zmdi-account-circle"></i>
                         <span>DOUBLE</span></a></li>
                 <li class="sidebar-header underline-blue">GESTION ADMIN</li>
-                <li><a href="{{ path('app_register') }}" target="_self"><i class="zmdi zmdi-grid"></i> <span>ajouter Admin</span>
-                        <small class="badge float-right badge-light">PDF</small></a>
+                <li><a href="{{ path('user_list') }}" target="_self"><i class="zmdi zmdi-grid"></i> <span>UTILISATEURS</span>
+                        <small class="badge float-right badge-light">OACA</small></a>
                 </li>
                 <li class="sidebar-header underline-blue">AUTRES</li>
-                <li><a href="{{ path('app_home') }}" target="_self"><i class="zmdi zmdi-view-dashboard"></i> <span>Statistique</span></a>
-                </li>
+
+                <li><a href="{{ path('app_directeur_index') }}" target="_self"><i
+                                class="zmdi zmdi-format-list-bulleted"></i>
+                        <span>Directeur</span></a></li>
                 <li><a href="{{ path('app_avion_index') }}" target="_self"><i
                                 class="zmdi zmdi-format-list-bulleted"></i>
                         <span>Avion</span></a></li>
                 <li><a href="{{ path('app_compagnie_index') }}" target="_self"><i
                                 class="zmdi zmdi-format-list-bulleted"></i>
                         <span>Compagnie</span></a></li>
-                <li><a href="{{ path('app_directeur_index') }}" target="_self"><i
-                                class="zmdi zmdi-format-list-bulleted"></i>
-                        <span>Directeur</span></a></li>
+
                 <li><a href="{{ path('app_ministere_index') }}" target="_self"><i
                                 class="zmdi zmdi-format-list-bulleted"></i>
                         <span>Ministére</span></a></li>
+                <li><a href="{{ path('app_home') }}" target="_self"><i class="zmdi zmdi-view-dashboard"></i> <span>Statistique</span></a>
+                </li>
                 <li><a href="{{ path('profile_show') }}" target="_self"><i class="zmdi zmdi-face"></i>
                         <span>Profil</span></a></li>
                 {% endif %}

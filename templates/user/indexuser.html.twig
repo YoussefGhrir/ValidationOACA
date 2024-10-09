@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <main id="main" class="main">
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card shadow-lg p-3 mb-5 bg-light rounded">
+                        <div class="card-body">
+                            <h5 class="card-title text-center mb-4 text-primary fw-bold">
+                                Liste des Admin OACA
+                            </h5>
+
+                            <!-- Boutons pour ajouter un utilisateur et retour à l'accueil -->
+                            <div class="mb-3 d-flex justify-content-between">
+                                <a href="{{ path('app_register') }}" class="btn btn-success btn-sm">
+                                    <i class="bi bi-plus-circle"></i> Ajouter un utilisateur
+                                </a>
+                                <a href="{{ path('app_home') }}" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-house-door"></i> Retour à l'accueil
+                                </a>
+                            </div>
+
+                            <!-- Table -->
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-bordered">
+                                    <thead class="bg-primary text-white">
+                                    <tr>
+                                        <th scope="col">Prénom</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for user in users %}
+                                        <tr>
+                                            <td>{{ user.firstName }}</td>
+                                            <td>{{ user.lastName }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>
+                                                <a href="{{ path('user_show', {'id': user.id}) }}" class="btn btn-info btn-sm">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-primary btn-sm">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="4" class="text-center">Aucun utilisateur trouvé</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
