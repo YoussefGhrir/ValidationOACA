@@ -48,6 +48,7 @@
                                         <th scope="col">Pays</th>
                                         <th scope="col">1ère Délivration</th>
                                         <th scope="col">Actions</th>
+                                        <th scope="col">Ajouté par</th>
                                     </tr>
                                     </thead>
                                     <!-- Scrollable Table Body -->
@@ -76,6 +77,7 @@
                                                     </button>
                                                 </form>
                                             </td>
+                                            <td class="createdBy">{{ pilote.createdBy.firstname }} {{ pilote.createdBy.lastname }}</td>
                                         </tr>
                                     {% else %}
                                         <tr>

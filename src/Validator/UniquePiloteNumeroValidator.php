@@ -4,7 +4,6 @@ namespace App\Validator;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PiloteRepository;
 
 class UniquePiloteNumeroValidator extends ConstraintValidator
@@ -19,17 +18,27 @@ class UniquePiloteNumeroValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         if (null === $value) {
-            return;
+            return;  // Si la valeur est null, on ne valide pas
         }
 
-        // Vérifie si un pilote avec ce numéro existe déjà
+        // Récupérer l'entité (Pilote) via le root du formulaire
+        $currentPilote = $this->context->getRoot()->getData();
+
+        // Assurez-vous que $currentPilote est bien une instance de Pilote
+        if (!$currentPilote instanceof \App\Entity\Pilote) {
+            return; // Si ce n'est pas un pilote, on ne fait rien
+        }
+
+        // Cherche un autre pilote avec le même numéro dans la base de données
         $existingPilote = $this->piloteRepository->findOneBy(['numero' => $value]);
 
-        if ($existingPilote) {
-            // Ajoute une violation si le numéro existe déjà
+        // Si un autre pilote avec ce numéro existe et ce n'est pas le pilote en cours de modification, on ajoute une violation
+        if ($existingPilote && $existingPilote->getId() !== $currentPilote->getId()) {
+            // Le numéro est déjà utilisé par un autre pilote
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ value }}', $value)
                 ->addViolation();
         }
+        // Si le pilote en cours a déjà ce numéro (pas d'autres conflits), on n'ajoute pas de violation.
     }
 }

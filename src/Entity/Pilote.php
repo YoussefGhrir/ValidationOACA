@@ -76,6 +76,24 @@ class Pilote
     #[ORM\Column(type: 'boolean')]
     private $statut = true ; // Par défaut 1 an (true)
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $createdBy = null;
+
+// Getter et Setter pour createdBy
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
     public function getStatut(): bool
     {
         return $this->statut;
@@ -196,9 +214,10 @@ class Pilote
         return $this->pays;
     }
 
-    public function setPays(?string $pays): static
+    public function setPays(?string $pays): self
     {
-        $this->pays = $pays;
+        // Met la première lettre de chaque mot en majuscule
+        $this->pays = ucwords(strtolower($pays));
         return $this;
     }
 

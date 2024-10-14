@@ -58,7 +58,7 @@ class PiloteType extends AbstractType
                     'placeholder' => 'YYYY-MM-DD'
                 ],
                 'label' => 'Date de début',
-                'data' => (new \DateTime())->format('Y-m-d'), // Conversion en chaîne de caractères
+
                 'constraints' => $dateConstraints,
             ])
             ->add('validite', TextType::class, [
@@ -67,6 +67,7 @@ class PiloteType extends AbstractType
                     'placeholder' => 'YYYY-MM-DD'
                 ],
                 'label' => 'Date de validité',
+                'data' => (new \DateTime())->format('Y-m-d'), // Conversion en chaîne de caractères
                 'constraints' => $dateConstraints,
             ])
             ->add('datequalif', TextType::class, [

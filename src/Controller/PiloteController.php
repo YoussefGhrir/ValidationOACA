@@ -10,6 +10,7 @@ use App\Repository\PiloteRepository;
 use App\Service\PdfGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -62,11 +63,24 @@ class PiloteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer l'utilisateur connecté
+            $user = $this->getUser(); // Utilisateur connecté
+
+            // Vérifier si l'utilisateur est défini
+            if ($user) {
+                // Associer l'utilisateur connecté comme créateur du pilote
+                $pilote->setCreatedBy($user);
+            } else {
+                // Si aucun utilisateur connecté, lever une exception ou gérer l'erreur
+                throw $this->createAccessDeniedException('Utilisateur non connecté.');
+            }
+
+            // Persister et enregistrer le pilote
             $entityManager->persist($pilote);
             $entityManager->flush();
 
-            // Stocke le message de succès dans la session
-            $session->getFlashBag()->add('success', 'Pilote ajouté avec succès !');
+            // Stocker le message de succès dans la session
+            $session->getFlashBag()->add('success', 'Pilote ajouté avec succès par ' . $user->getFirstname() . ' ' . $user->getLastname());
 
             // Redirige vers la même page pour ajouter un autre pilote
             return $this->redirectToRoute('app_pilote_new');
@@ -76,6 +90,7 @@ class PiloteController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     #[Route('/{id}', name: 'app_pilote_show', methods: ['GET'])]
     public function show(Pilote $pilote): Response
     {
@@ -115,6 +130,7 @@ class PiloteController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     #[Route('/{id}', name: 'app_pilote_delete', methods: ['POST'])]
     public function delete(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): Response
     {
@@ -127,9 +143,9 @@ class PiloteController extends AbstractController
             $entityManager->flush();
 
             // Redirection en fonction du type de pilote
-            if ($piloteType === false ) {
+            if ($piloteType === false) {
                 return $this->redirectToRoute('app_pilote_atpl', [], Response::HTTP_SEE_OTHER);
-            } elseif ($piloteType === true ) {
+            } elseif ($piloteType === true) {
                 return $this->redirectToRoute('app_pilote_cpl', [], Response::HTTP_SEE_OTHER);
             } else { // Pour le type 'Double'
                 return $this->redirectToRoute('app_pilote_double', [], Response::HTTP_SEE_OTHER);
@@ -163,5 +179,24 @@ class PiloteController extends AbstractController
         // Générer le PDF avec les données du pilote, de la compagnie, et de l'avion
         return $pdfGenerator->generatePdf($pilote, 'pdf/pdf_template.html.twig', $data);
     }
-}
 
+    #[Route('/pilote/update-statut/{id}', name: 'update_statut', methods: ['POST'])]
+    public function updateStatut(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+
+            if (isset($data['statut'])) {
+                $pilote->setStatut((bool)$data['statut']); // Cast pour s'assurer que le statut est un booléen
+                $entityManager->persist($pilote);
+                $entityManager->flush();
+
+                return new JsonResponse(['success' => true], 200);
+            } else {
+                return new JsonResponse(['error' => 'Données invalides'], 400);
+            }
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Erreur lors de la mise à jour du statut : ' . $e->getMessage()], 500);
+        }
+    }
+}

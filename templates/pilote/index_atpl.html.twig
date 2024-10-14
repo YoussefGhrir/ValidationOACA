@@ -52,6 +52,7 @@
                         <th scope="col">Pays</th>
                         <th scope="col">1ère Délivration</th>
                         <th scope="col">Actions</th>
+                        <th scope="col">Ajouté par</th>
                     </tr>
                     </thead>
                     <!-- Scrollable Table Body -->
@@ -95,6 +96,7 @@
                                     </button>
                                 </form>
                             </td>
+                            <td class="createdBy">{{ pilote.createdBy.firstname }} {{ pilote.createdBy.lastname }}</td>
                         </tr>
                     {% else %}
                         <tr>
@@ -162,5 +164,48 @@
                 filterPilotes();
             });
         });
+    </script>
+    <script>document.addEventListener('DOMContentLoaded', function () {
+            const toggleSwitches = document.querySelectorAll('.toggle-switch');
+
+            toggleSwitches.forEach(function(toggle) {
+                toggle.addEventListener('change', function() {
+                    const isChecked = toggle.checked;
+                    const piloteId = toggle.dataset.id; // Récupérer l'ID du pilote
+
+                    // Envoi de la requête AJAX pour mettre à jour le statut
+                    fetch('{{ path('update_statut', {'id': 'piloteId'}) }}'.replace('piloteId', piloteId), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': '{{ csrf_token('update_statut') }}'
+                        },
+                        body: JSON.stringify({
+                            statut: isChecked // Envoyer le nouveau statut
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erreur lors de la mise à jour du statut.');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Statut mis à jour avec succès');
+                            } else {
+                                console.error('Erreur côté serveur : ', data.error);
+                                alert('Une erreur s\'est produite : ' + data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erreur:', error);
+                            alert('Une erreur s\'est produite lors de la mise à jour du statut.');
+                        });
+                });
+            });
+        });
+
     </script>
 {% endblock %}
