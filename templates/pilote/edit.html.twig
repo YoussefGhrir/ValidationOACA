@@ -8,10 +8,6 @@
         .alert {
             transition: opacity 1s ease-out;
         }
-
-        .fade-out {
-            opacity: 0;
-        }
     </style>
 {% endblock %}
 
@@ -49,11 +45,19 @@
                                     }) }}
                                 </div>
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.numero, {
-                                        'label': 'Numéro',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.numero) }}
+                                    {{ form_widget(form.numero, {
+                                        'attr': {
+                                            'class': 'form-control form-control-custom ' ~ (form.numero.vars.errors|length > 0 ? 'is-invalid' : '')
+                                        }
                                     }) }}
+
+                                    {# Afficher les erreurs pour le champ 'numero' #}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.numero) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
                                     {{ form_row(form.nom, {
                                         'label': 'Nom',

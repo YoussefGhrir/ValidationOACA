@@ -200,4 +200,26 @@ html, body {
 }
 .disconnected {
     background-color: red;
+
+
+}
+/* Messages d'erreur spécifiques pour les champs de formulaire */
+.form-error-message {
+
+}
+.form-control-error {
+    border-color: #f5c6cb;
+    background-color: #fff6f6;
+}
+/* Champ de formulaire avec erreur (Bootstrap-like) */
+.is-invalid {
+    border-color: #dc3545; /* Rouge pour indiquer l'erreur */
+    background-color: #f8d7da; /* Arrière-plan rouge clair */
+}
+
+/* Messages d'erreur sous le champ */
+.invalid-feedback {
+    color: #dc3545; /* Rouge */
+    font-size: 0.875rem; /* Taille du texte légèrement réduite */
+    margin-top: 0.25rem;
 }

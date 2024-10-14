@@ -9,6 +9,7 @@
     <title>OACA autorisation</title>
 
     {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('design/css/status.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/msg.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/icons.css') }}">
@@ -80,7 +81,7 @@
                 <li><a href="{{ path('app_ministere_index') }}" target="_self"><i
                                 class="zmdi zmdi-format-list-bulleted"></i>
                         <span>Ministére</span></a></li>
-                <li><a href="{{ path('app_home') }}" target="_self"><i class="zmdi zmdi-view-dashboard"></i> <span>Statistique</span></a>
+                <li><a href="{{ path('statistiques') }}" target="_self"><i class="zmdi zmdi-view-dashboard"></i> <span>Statistique</span></a>
                 </li>
                 <li><a href="{{ path('profile_show') }}" target="_self"><i class="zmdi zmdi-face"></i>
                         <span>Profil</span></a></li>
@@ -315,7 +316,31 @@
             applyZoom();
         });
     </script>
+<script>document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.toggle-switch').forEach(function(toggle) {
+            toggle.addEventListener('change', function() {
+                var statut = this.checked ? 1 : 0;  // 1 an (true) ou 2 ans (false)
+                var piloteId = this.getAttribute('data-id');
 
+                // Faire une requête POST pour sauvegarder le statut
+                fetch(`/pilote/update-statut/${piloteId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ statut: statut })
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log("Statut mis à jour avec succès");
+                        } else {
+                            console.error("Erreur lors de la mise à jour du statut");
+                        }
+                    });
+            });
+        });
+    });
+</script>
 {% endblock %}
 </body>
 </html>

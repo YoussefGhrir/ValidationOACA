@@ -76,8 +76,6 @@ class PiloteController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-
     #[Route('/{id}', name: 'app_pilote_show', methods: ['GET'])]
     public function show(Pilote $pilote): Response
     {
@@ -117,7 +115,6 @@ class PiloteController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
     #[Route('/{id}', name: 'app_pilote_delete', methods: ['POST'])]
     public function delete(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): Response
     {
@@ -167,3 +164,4 @@ class PiloteController extends AbstractController
         return $pdfGenerator->generatePdf($pilote, 'pdf/pdf_template.html.twig', $data);
     }
 }
+

@@ -73,6 +73,19 @@ class Pilote
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $privilegeag = null;
+    #[ORM\Column(type: 'boolean')]
+    private $statut = true ; // Par défaut 1 an (true)
+
+    public function getStatut(): bool
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(bool $statut): self
+    {
+        $this->statut = $statut;
+        return $this;
+    }
 
     public function getId(): ?int
     {

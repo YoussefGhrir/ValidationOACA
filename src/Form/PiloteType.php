@@ -7,6 +7,7 @@ use App\Entity\Pilote;
 use App\Validator\UniquePiloteNumero;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,18 +21,14 @@ class PiloteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // Récupérer l'option 'is_update'
         $isUpdate = $options['is_update'];
 
-        // Définir les contraintes pour le champ 'numero'
-        $constraints = [
-            new NotBlank(),
-        ];
+        // Définir les contraintes du champ 'numero'
+        $constraints = [new NotBlank()];
 
-        // Appliquer la contrainte UniquePiloteNumero seulement si ce n'est pas une mise à jour
-        if (!$isUpdate) {
-            $constraints[] = new UniquePiloteNumero(); // Contrainte d'unicité appliquée uniquement lors de la création
-        }
+        // Appliquer la contrainte UniquePiloteNumero pour la création et la mise à jour (en vérifiant correctement l'unicité)
+        $constraints[] = new UniquePiloteNumero(); // Ajoute la contrainte d'unicité
+
         $dateConstraints = [
             new NotBlank(),
             new DateTime(['format' => 'Y-m-d', 'message' => 'Veuillez entrer une date valide (YYYY-MM-DD).'])
@@ -49,13 +46,10 @@ class PiloteType extends AbstractType
                 'constraints' => $dateConstraints,
             ])
             ->add('numero', TextType::class, [
-                'constraints' => $constraints, // Contrainte d'unicité appliquée seulement lors de la création
                 'label' => 'Numéro',
+                'constraints' => $constraints,
                 'attr' => [
-                    'class' => 'form-control form-control-custom',
-                    'inputmode' => 'numeric',
-                    'autocomplete' => 'off',
-                    'spellcheck' => 'false',
+                    'class' => 'form-control',
                 ],
             ])
             ->add('firstdate', TextType::class, [

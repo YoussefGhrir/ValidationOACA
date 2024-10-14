@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
+
     {{ parent() }}
 {% endblock %}
 {% block body %}
@@ -12,16 +13,21 @@
             <form id="searchForm" class="mb-4">
                 <div class="row align-items-end">
                     <div class="col-md-2">
-                        <label for="numeroSearch"></label><input type="text" id="numeroSearch" class="form-control" placeholder="Rechercher par numéro">
+                        <label for="numeroSearch"></label><input type="text" id="numeroSearch" class="form-control"
+                                                                 placeholder="Rechercher par numéro">
                     </div>
                     <div class="col-md-2">
-                        <label for="nomSearch"></label><input type="text" id="nomSearch" class="form-control" placeholder="Rechercher par nom">
+                        <label for="nomSearch"></label><input type="text" id="nomSearch" class="form-control"
+                                                              placeholder="Rechercher par nom">
                     </div>
                     <div class="col-md-2">
-                        <label for="prenomSearch"></label><input type="text" id="prenomSearch" class="form-control" placeholder="Rechercher par prénom">
+                        <label for="prenomSearch"></label><input type="text" id="prenomSearch" class="form-control"
+                                                                 placeholder="Rechercher par prénom">
                     </div>
                     <div class="col-md-3">
-                        <label for="dateFilter"></label><input type="date" id="dateFilter" class="form-control datepicker form-control-custom" placeholder="Filtrer par 1ère délivrance">
+                        <label for="dateFilter"></label><input type="date" id="dateFilter"
+                                                               class="form-control datepicker form-control-custom"
+                                                               placeholder="Filtrer par 1ère délivrance">
                     </div>
                     <div class="col-md-2">
                         <button type="button" id="resetFilter" class="btn bg-warning">
@@ -38,6 +44,7 @@
                     <!-- Fixed Table Head -->
                     <thead style="background-color: #6A5ACD; color: white; position: sticky; top: 0; z-index: 10;">
                     <tr>
+                        <th scope="col">Statut</th>
                         <th scope="col">Numéro</th>
                         <th scope="col">Fonction</th>
                         <th scope="col">Nom</th>
@@ -51,6 +58,18 @@
                     <tbody id="pilotesTable">
                     {% for pilote in pilotes %}
                         <tr>
+                            <td>
+                                <!-- Toggle switch avec texte '1 an' et '2 ans', initialisé selon le statut -->
+                                <label class="switch">
+                                    <input type="checkbox" class="toggle-switch" data-row-id="row-{{ loop.index }}"
+                                           data-id="{{ pilote.id }}"
+                                            {% if pilote.statut %} checked {% endif %}>
+                                    <span class="slider round">
+                <span class="switch-text-on">1 an</span>
+                <span class="switch-text-off">2 ans</span>
+            </span>
+                                </label>
+                            </td>
                             <td class="numero">{{ pilote.numero }}</td>
                             <td>{{ pilote.fonction }}</td>
                             <td class="nom">{{ pilote.nom }}</td>
@@ -58,16 +77,20 @@
                             <td>{{ pilote.pays }}</td>
                             <td class="firstdate">{{ pilote.firstdate|date('Y-m-d') }}</td>
                             <td>
-                                <a href="{{ path('pilote_generate_pdf', {id: pilote.id}) }}" class="btn btn-dark btn-sm"><i class="fas fa-file-pdf"></i></a>
+                                <a href="{{ path('pilote_generate_pdf', {id: pilote.id}) }}"
+                                   class="btn btn-dark btn-sm"><i class="fas fa-file-pdf"></i></a>
                                 <a href="{{ path('app_pilote_show', {'id': pilote.id}) }}" class="btn btn-info btn-sm">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                <a href="{{ path('app_pilote_edit', {'id': pilote.id}) }}" class="btn btn-primary btn-sm">
+                                <a href="{{ path('app_pilote_edit', {'id': pilote.id}) }}"
+                                   class="btn btn-primary btn-sm">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <form action="{{ path('app_pilote_delete', {'id': pilote.id}) }}" method="post" style="display:inline;">
+                                <form action="{{ path('app_pilote_delete', {'id': pilote.id}) }}" method="post"
+                                      style="display:inline;">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pilote.id) }}">
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce pilote ?')">
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce pilote ?')">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
