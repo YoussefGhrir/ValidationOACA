@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -87,34 +88,53 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/edit/{id}', name: 'user_edit', requirements: ['id' => '\d+'])]
-    public function edit(int $id, EntityManagerInterface $entityManager, Request $request): Response
+    public function edit(
+        int $id,
+        EntityManagerInterface $entityManager,
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher // Ajouter le hachage du mot de passe
+    ): Response
     {
-        // Check if the user has the ROLE_ADMIN
+        // Vérification des droits
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à modifier des utilisateurs. Veuillez contacter l\'administrateur.');
-            return $this->redirectToRoute('app_home'); // Replace 'app_home' with your home page route
+            return $this->redirectToRoute('app_home'); // Remplace 'app_home' par ta route d'accueil
         }
 
+        // Récupération de l'utilisateur à modifier
         $user = $entityManager->getRepository(User::class)->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('Utilisateur non trouvé');
         }
 
+        // Création du formulaire
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
+        // Si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérification du champ mot de passe
+            $plainPassword = $form->get('password')->getData();
+
+            if ($plainPassword) {
+                // Hachage du mot de passe avant mise à jour
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+            }
+
+            // Sauvegarder les modifications
             $entityManager->flush();
 
+            // Message de confirmation
             $this->addFlash('success', 'Utilisateur mis à jour avec succès');
 
             return $this->redirectToRoute('user_list');
         }
 
+        // Affichage du formulaire de modification
         return $this->render('user/edituser.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
         ]);
-    }
-}
+    }}

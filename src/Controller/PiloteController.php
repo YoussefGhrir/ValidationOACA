@@ -8,6 +8,7 @@ use App\Entity\Pilote;
 use App\Form\PiloteType;
 use App\Repository\PiloteRepository;
 use App\Service\PdfGenerator;
+use App\Service\PiloteStatusService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,15 +20,24 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/pilote')]
 class PiloteController extends AbstractController
 {
+    private $piloteStatusService;
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager, PiloteStatusService $piloteStatusService)
+    {
+        $this->entityManager = $entityManager;
+        $this->piloteStatusService = $piloteStatusService;
+    }
+
     #[Route('/ATPL', name: 'app_pilote_atpl', methods: ['GET'])]
     public function atpl(PiloteRepository $piloteRepository): Response
     {
-        $atplPilotes = $piloteRepository->findBy(['type' => false]); // ATPL
+        // Récupérer les pilotes ATPL sans modifier leur statut
+        $atplPilotes = $piloteRepository->findBy(['type' => false]);
 
         return $this->render('pilote/index_atpl.html.twig', [
             'pilotes' => $atplPilotes,
         ]);
-
     }
 
     #[Route('/CPL', name: 'app_pilote_cpl', methods: ['GET'])]
@@ -180,23 +190,24 @@ class PiloteController extends AbstractController
         return $pdfGenerator->generatePdf($pilote, 'pdf/pdf_template.html.twig', $data);
     }
 
-    #[Route('/pilote/update-statut/{id}', name: 'update_statut', methods: ['POST'])]
-    public function updateStatut(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/pilote/update-statut-and-date/{id}', name: 'update_statut_and_date', methods: ['POST'])]
+    public function updateStatutAndDate(Request $request, Pilote $pilote): JsonResponse
     {
-        try {
-            $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
 
-            if (isset($data['statut'])) {
-                $pilote->setStatut((bool)$data['statut']); // Cast pour s'assurer que le statut est un booléen
-                $entityManager->persist($pilote);
-                $entityManager->flush();
+        if (isset($data['statut'])) {
+            // Mettre à jour le statut
+            $pilote->setStatut($data['statut']);
 
-                return new JsonResponse(['success' => true], 200);
-            } else {
-                return new JsonResponse(['error' => 'Données invalides'], 400);
-            }
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Erreur lors de la mise à jour du statut : ' . $e->getMessage()], 500);
+            // Appliquer le service pour mettre à jour la firstdate
+            $this->piloteStatusService->updatePiloteStatus($pilote);
+
+            // Sauvegarder les modifications
+            $this->entityManager->flush();
+
+            return new JsonResponse(['success' => true]);
         }
+
+        return new JsonResponse(['success' => false, 'error' => 'Statut non fourni'], 400);
     }
 }

@@ -74,11 +74,12 @@ class Pilote
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $privilegeag = null;
     #[ORM\Column(type: 'boolean')]
-    private $statut = true ; // Par défaut 1 an (true)
+    private $statut = true; // Par défaut 1 an (true)
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $createdBy = null;
+
 
 // Getter et Setter pour createdBy
 
@@ -122,7 +123,6 @@ class Pilote
     }
 
 
-
     public function getPrenom(): ?string
     {
         return $this->prenom;
@@ -156,7 +156,7 @@ class Pilote
         return $this->numero;
     }
 
-    public function setNumero(?String $numero): static
+    public function setNumero(?string $numero): static
     {
         // Convertir le numéro en majuscules
         $this->numero = $numero !== null ? strtoupper($numero) : null;
@@ -169,15 +169,22 @@ class Pilote
         return $this->firstdate;
     }
 
-    public function setFirstdate(?string $firstdate): static
+    public function setFirstdate(DateTimeInterface|string|null $firstdate): static
     {
-        if ($firstdate) {
+        if ($firstdate instanceof DateTimeInterface) {
+            // If the argument is already a DateTime object, use it
+            $this->firstdate = $firstdate;
+        } elseif (is_string($firstdate)) {
+            // If it's a string, try to convert it to a DateTime object
             $this->firstdate = DateTime::createFromFormat('Y-m-d', $firstdate) ?: null;
         } else {
+            // If null, set to null
             $this->firstdate = null;
         }
+
         return $this;
     }
+
 
     public function getValidite(): ?DateTimeInterface
     {
@@ -233,14 +240,16 @@ class Pilote
     }
 
     // Setter pour nationalite
-    public function setNationalite(string $nationalite): self {
+    public function setNationalite(string $nationalite): self
+    {
         // Met la première lettre de chaque mot en majuscule
         $this->nationalite = ucwords(strtolower($nationalite));
         return $this;
     }
 
     // Getter pour nationalite
-    public function getNationalite(): ?string {
+    public function getNationalite(): ?string
+    {
         return $this->nationalite;
     }
 
@@ -248,20 +257,24 @@ class Pilote
     {
         return $this->type;
     }
+
     public function __construct()
     {
         // Initialize the type property
         $this->type = false;  // Default value
     }
+
     public function setType(?bool $type): static
     {
         $this->type = $type;
         return $this;
     }
+
     public function getType(): ?bool
     {
         return $this->type;
     }
+
     public function getTypeLabel(): string
     {
         if ($this->type === null) {

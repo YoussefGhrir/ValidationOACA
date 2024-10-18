@@ -1,5 +1,26 @@
 {
+  "name": "validation-pilot",
+  "version": "1.0.0",
+  "description": "Application Symfony pour la validation de pilote de L'OACA",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
   "dependencies": {
     "bootstrap": "^5.3.3"
-  }
+  },
+  "devDependencies": {
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "asarUnpack": "**/*",
+    "win": {
+      "signAndEditExecutable": false,
+      "requestedExecutionLevel": "requireAdministrator"
+    }
+  },
+  "author": "Youssef",
+  "license": "MIT"
 }

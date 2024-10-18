@@ -9,9 +9,6 @@
             transition: opacity 1s ease-out;
         }
 
-        .fade-out {
-            opacity: 0;
-        }
     </style>
 {% endblock %}
 
@@ -29,7 +26,7 @@
                     </div>
                 {% endfor %}
 
-                <div class="card mt-4 ">
+                <div class="card mt-4">
                     <div class="card-body">
                         {{ form_start(form) }}
                         <div class="row">
@@ -48,8 +45,6 @@
                                             'class': 'form-control form-control-custom ' ~ (form.numero.vars.errors|length > 0 ? 'is-invalid' : '')
                                         }
                                     }) }}
-
-                                    {# Afficher les erreurs pour le champ 'numero' #}
                                     <div class="invalid-feedback">
                                         {{ form_errors(form.numero) }}
                                     </div>
@@ -82,13 +77,14 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form_row(form.avion, {
-                                        'label': 'Avion',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                        "label": "Type d'Avion",
+                                        "attr": {"class": "form-control form-control-custom"}
                                     }) }}
                                 </div>
+
                                 <div class="form-group mb-3">
                                     {{ form_row(form.privilegefr, {
-                                        'label': 'privilege en français',
+                                        'label': 'Privilège en français',
                                         'attr': {'class': 'form-control form-control-custom'}
                                     }) }}
                                 </div>
@@ -110,25 +106,25 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form_row(form.firstdate, {
-                                        'label': '1ère Délivration',
+                                        'label': '1ère Délivrance',
                                         'attr': {'class': 'form-control datepicker form-control-custom'}
                                     }) }}
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form_row(form.validite, {
-                                        'label': 'Délivré le',
+                                        'label': 'Délivrée le',
                                         'attr': {'class': 'form-control datepicker form-control-custom'}
                                     }) }}
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form_row(form.datequalif, {
-                                        'label': 'Date Qualification',
+                                        'label': 'Validité de la Qualification',
                                         'attr': {'class': 'form-control datepicker form-control-custom'}
                                     }) }}
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form_row(form.datelangue, {
-                                        'label': 'Date de langue',
+                                        'label': 'Validité linguistique',
                                         'attr': {'class': 'form-control datepicker form-control-custom'}
                                     }) }}
                                 </div>
@@ -140,7 +136,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form_row(form.privilegeag, {
-                                        'label': 'privilege en anglais',
+                                        'label': 'Privilège en anglais',
                                         'attr': {'class': 'form-control form-control-custom'}
                                     }) }}
                                 </div>
@@ -160,8 +156,8 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -170,10 +166,8 @@
             flatpickr(".datepicker", {
                 dateFormat: "Y-m-d",  // Format de la date
                 allowInput: true,      // Permettre la saisie manuelle
-                clickOpens: true       // Le calendrier s'ouvre en cliquant (ne bloque pas la saisie)
+                clickOpens: true       // Le calendrier s\'ouvre en cliquant (ne bloque pas la saisie) - Escaped the single quote
             });
         });
     </script>
-
 {% endblock %}
-
