@@ -113,6 +113,9 @@ class PiloteController extends AbstractController
     #[Route('/{id}/edit', name: 'app_pilote_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): Response
     {
+        // Cloner l'entité Pilote pour conserver l'état avant modification
+        $originalPilote = clone $pilote;
+
         // Créer le formulaire en passant 'is_update' et 'default_type' pour le type actuel du pilote
         $form = $this->createForm(PiloteType::class, $pilote, [
             'is_update' => true,
@@ -124,11 +127,50 @@ class PiloteController extends AbstractController
 
         // Vérifier si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
-            // Sauvegarder les changements dans la base de données
+            // Sauvegarder le type avant modification
+            $oldType = $originalPilote->getType();
+            $newType = $pilote->getType();  // Type après la modification
+
+            // Vérifier si le type a changé
+            if ($oldType !== $newType) {
+                // Cloner l'original et conserver son ancien type
+                $copiedPilote = new Pilote();
+
+                // Copier les propriétés du pilote original
+                $copiedPilote->setNom($originalPilote->getNom());
+                $copiedPilote->setPrenom($originalPilote->getPrenom());
+                $copiedPilote->setNumero($originalPilote->getNumero());
+                $copiedPilote->setFonction($originalPilote->getFonction());
+
+                // Conversion des objets DateTime en chaînes (format Y-m-d)
+                $copiedPilote->setDatebirth($originalPilote->getDatebirth() ? $originalPilote->getDatebirth()->format('Y-m-d') : null);
+                $copiedPilote->setFirstdate($originalPilote->getFirstdate() ? $originalPilote->getFirstdate()->format('Y-m-d') : null);
+                $copiedPilote->setValidite($originalPilote->getValidite() ? $originalPilote->getValidite()->format('Y-m-d') : null);
+                $copiedPilote->setDatequalif($originalPilote->getDatequalif() ? $originalPilote->getDatequalif()->format('Y-m-d') : null);
+                $copiedPilote->setDatelangue($originalPilote->getDatelangue() ? $originalPilote->getDatelangue()->format('Y-m-d') : null);
+
+                // Copier les autres propriétés
+                $copiedPilote->setAvion($originalPilote->getAvion());
+                $copiedPilote->setPrivilegefr($originalPilote->getPrivilegefr());
+                $copiedPilote->setNationalite($originalPilote->getNationalite());
+                $copiedPilote->setPays($originalPilote->getPays());
+                $copiedPilote->setCompagnie($originalPilote->getCompagnie());
+                $copiedPilote->setPrivilegeag($originalPilote->getPrivilegeag());
+                $copiedPilote->setCreatedBy($originalPilote->getCreatedBy());
+
+                // S'assurer que la copie garde l'ancien type
+                $copiedPilote->setType($oldType);
+
+                // Persister la copie dans la base de données
+                $entityManager->persist($copiedPilote);
+            }
+
+            // Sauvegarder les modifications du pilote avec le nouveau type
+            $entityManager->persist($pilote);
             $entityManager->flush();
 
             // Ajouter un message flash de succès
-            $this->addFlash('success', 'Le pilote a été modifié avec succès.');
+            $this->addFlash('success', 'Le pilote a été modifié avec succès et une copie de l\'ancien pilote a été créée.');
 
             // Rediriger vers la page d'édition pour ce pilote
             return $this->redirectToRoute('app_pilote_edit', ['id' => $pilote->getId()]);
@@ -140,6 +182,7 @@ class PiloteController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_pilote_delete', methods: ['POST'])]
     public function delete(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): Response
