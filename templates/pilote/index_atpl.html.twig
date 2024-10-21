@@ -72,15 +72,23 @@
                                 </label>
                             </td>
                             <td class="numero">
-                                <!-- Bouton pour afficher l'historique avec icône -->
-                                <a href="{{ path('pilote_historique', { 'id': pilote.id }) }}"
-                                   class="btn btn-warning btn-sm"
-                                > <!-- Ouvre dans un nouvel onglet -->
-                                    <i class="bi bi-clock-history"></i> <!-- Icône de l'historique -->
-                                </a>
+                                <!-- Conteneur flex pour un alignement vertical centré -->
+                                <div style="display: flex; align-items: center;">
+                                    <!-- Bouton pour afficher l'historique avec icône -->
+                                    <a href="{{ path('pilote_historique', { 'id': pilote.id }) }}"
+                                       class="btn btn-warning btn-sm"
+                                       target="_blank"
+                                       style="margin-right: 10px; display: flex; align-items: center;">  <!-- Ajustement du bouton -->
+                                        <i class="bi bi-clock-history"></i>
+                                    </a>
 
-                                {{ pilote.numero }}
+                                    <!-- Numéro du pilote -->
+                                    <span>{{ pilote.numero }}</span>
+                                </div>
                             </td>
+
+
+
 
                             <td>{{ pilote.fonction }}</td>
                             <td class="nom">{{ pilote.nom }}</td>

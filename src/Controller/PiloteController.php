@@ -221,7 +221,7 @@ class PiloteController extends AbstractController
     }
 
 
-    #[Route('/pilote/generate-pdf/{id}', name: 'pilote_generate_pdf')]
+    #[Route('/generate-pdf/{id}', name: 'pilote_generate_pdf')]
     public function generatePdf(Pilote $pilote, PdfGenerator $pdfGenerator): Response
     {
         // Vérification que le pilote a bien sélectionné une compagnie et un avion
@@ -244,7 +244,7 @@ class PiloteController extends AbstractController
         return $pdfGenerator->generatePdf($pilote, 'pdf/pdf_template.html.twig', $data);
     }
 
-    #[Route('/pilote/update-statut-and-date/{id}', name: 'update_statut_and_date', methods: ['POST'])]
+    #[Route('/update-statut-and-date/{id}', name: 'update_statut_and_date', methods: ['POST'])]
     public function updateStatutAndDate(Request $request, Pilote $pilote): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -265,7 +265,7 @@ class PiloteController extends AbstractController
 
         return new JsonResponse(['success' => false, 'error' => 'Statut non fourni'], 400);
     }
-    #[Route('/pilote/{id}/historique', name: 'pilote_historique', methods: ['GET'])]
+    #[Route('/{id}/historique', name: 'pilote_historique', methods: ['GET'])]
     public function afficherHistorique(Pilote $pilote, ValidationHistoriqueRepository $historiqueRepository): Response
     {
         $historique = $historiqueRepository->findBy(['pilote' => $pilote]);

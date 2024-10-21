@@ -6,16 +6,15 @@
 
 /* Style spécifique pour la colonne "1ère délivrance" */
 .highlight-delivrance th, .highlight-delivrance td {
-    background-color: #FEE440;
-    border: 2px solid #FFC107;
+    border: 2px solid #FEE440 !important;  /* Bordure jaune, forcée avec !important */
+    background-color: transparent !important;  /* Supprime la couleur de fond, forcée avec !important */
     font-weight: bold;
     padding: 10px;
     color: #444;
     font-size: 1.1rem;
-    transition: background-color 0.3s ease;
 }
 
-/* Ajustement de l'icône */
+/* Ajustement de l'icône pour la rendre plus propre */
 .highlight-delivrance th i {
     margin-right: 8px;
 }

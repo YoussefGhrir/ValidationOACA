@@ -36,7 +36,7 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background-color: #2889a7; /* Couleur de l'élément sélectionné */
+    background-color: #003366; /* Couleur de l'élément sélectionné */
     transform: translate(-50%, -50%);
     box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2); /* Ombre légère pour l'élément sélectionné */
 }

@@ -80,8 +80,7 @@
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover">
                                             <tbody>
-                                            <!-- Ligne spéciale avec le style "highlight-delivrance" pour 1ère délivrance -->
-                                            <tr class="highlight-delivrance">
+                                            <tr class="highlight-delivrance" style="border: 2px solid #FEE440; background-color: transparent;">
                                                 <th scope="row">
                                                     <i class="bi bi-calendar-event"></i> 1ère délivrance
                                                 </th>
@@ -89,6 +88,7 @@
                                                     {{ pilote.firstdate ? pilote.firstdate|date('d/m/Y') : '' }}
                                                 </td>
                                             </tr>
+
 
                                             <tr>
                                                 <th scope="row">Délivrée le</th>
