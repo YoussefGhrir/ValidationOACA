@@ -80,6 +80,12 @@ class Pilote
     #[ORM\JoinColumn(nullable: false)]
     private ?User $createdBy = null;
 
+    /**
+     * @var Collection<int, ValidationHistorique>
+     */
+    #[ORM\OneToMany(targetEntity: ValidationHistorique::class, mappedBy: 'pilote')]
+    private Collection $validationHistoriques;
+
 
 // Getter et Setter pour createdBy
 
@@ -262,6 +268,7 @@ class Pilote
     {
         // Initialize the type property
         $this->type = false;  // Default value
+        $this->validationHistoriques = new ArrayCollection();
     }
 
     public function setType(?bool $type): static
@@ -366,6 +373,43 @@ class Pilote
     public function setPrivilegeag(?string $privilegeag): static
     {
         $this->privilegeag = $privilegeag;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ValidationHistorique>
+     */
+    public function getValidationHistoriques(): Collection
+    {
+        return $this->validationHistoriques;
+    }
+
+    public function addValidationHistorique(ValidationHistorique $validationHistorique): static
+    {
+        if (!$this->validationHistoriques->contains($validationHistorique)) {
+            $this->validationHistoriques->add($validationHistorique);
+            $validationHistorique->setPilote($this);
+        }
+
+        return $this;
+    }
+    public function setValidationHistoriques(Collection $validationHistoriques): self
+    {
+        // Vider l'ancienne collection avant d'ajouter la nouvelle
+        $this->validationHistoriques = $validationHistoriques;
+
+        return $this;
+    }
+
+    public function removeValidationHistorique(ValidationHistorique $validationHistorique): static
+    {
+        if ($this->validationHistoriques->removeElement($validationHistorique)) {
+            // set the owning side to null (unless already changed)
+            if ($validationHistorique->getPilote() === $this) {
+                $validationHistorique->setPilote(null);
+            }
+        }
 
         return $this;
     }

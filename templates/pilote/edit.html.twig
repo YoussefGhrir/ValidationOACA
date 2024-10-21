@@ -9,6 +9,30 @@
             transition: opacity 1s ease-out;
         }
     </style>
+    <style>
+        /* Centrage des dates pour tous les champs du formulaire */
+        .form-control.datepicker {
+            text-align: center;  /* Centrage horizontal */
+            font-size: 1rem;  /* Taille de police standard */
+        }
+
+        /* Style spécifique pour le champ "1ère Délivrance" dans le formulaire */
+        .highlight-delivrance .form-control {
+            background-color: #FFC107;  /* Couleur de fond plus douce */
+            border: 2px solid #FFA500;  /* Bordure orange plus vive */
+            color: #333;                /* Couleur du texte légèrement plus foncée */
+            font-weight: bold;          /* Texte en gras */
+            padding: 10px;              /* Augmenter le padding pour aérer */
+            border-radius: 8px;         /* Arrondir les coins pour un look plus doux */
+            text-align: center;         /* Centrer le texte */
+        }
+
+        /* Style pour le label */
+        .highlight-delivrance label {
+            font-weight: bold;          /* Texte du label en gras */
+            margin-bottom: 5px;         /* Ajouter un espace entre le label et l'input */
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -102,13 +126,14 @@
                                         'attr': {'class': 'form-control form-control-custom'}
                                     }) }}
                                 </div>
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-3 highlight-delivrance">
                                     {{ form_row(form.firstdate, {
                                         'label': '1ère Délivrance',
                                         'attr': {'class': 'form-control datepicker form-control-custom'},
                                         'value': form.firstdate.vars.value ? form.firstdate.vars.value|date('Y-m-d') : ''
                                     }) }}
                                 </div>
+
                                 <div class="form-group mb-3">
                                     {{ form_row(form.validite, {
                                         'label': 'Délivrée le',
@@ -146,10 +171,20 @@
                                 <button type="submit" class="btn btn-success btn-lg">
                                     <i class="fas fa-save"></i> Mettre à jour
                                 </button>
+
+                                <!-- Bouton pour afficher l'historique avec icône -->
+                                <a href="{{ path('pilote_historique', { 'id': pilote.id }) }}"
+                                   class="btn btn-warning btn-lg"
+                                   target="_blank" rel="noopener noreferrer"> <!-- Ouvre dans un nouvel onglet -->
+                                    <i class="bi bi-clock-history"></i> <!-- Icône de l'historique -->
+                                </a>
+                                <!-- Bouton pour générer le PDF -->
                                 <a href="{{ path('pilote_generate_pdf', {id: pilote.id}) }}"
-                                   class="btn btn-dark btn-lg">
+                                   class="btn btn-dark btn-lg"
+                                   target="_blank" rel="noopener noreferrer">
                                     <i class="fas fa-file-pdf"></i> PDF
                                 </a>
+
                                 {% if pilote.type is same as(false) %}
                                     <a href="{{ path('app_pilote_atpl') }}" class="btn btn-warning btn-lg">
                                         <i class="fas fa-arrow-left"></i> Retour à la liste ATPL

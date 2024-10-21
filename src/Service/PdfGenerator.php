@@ -3,6 +3,7 @@
 
 namespace App\Service;
 
+use App\Entity\ValidationHistorique;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Twig\Environment;
@@ -151,6 +152,12 @@ class PdfGenerator
         // Ajouter les privilèges au template
         $data['privilegefr'] = $pilote->getPrivilegefr() ?? '';
         $data['privilegeag'] = $pilote->getPrivilegeag() ?? '';
+        // Capturer la date actuelle pour "Délivrée le"
+        $dateDelivreeLe = new \DateTime();
+
+        // Enregistrer les dates dans l'historique
+        $this->saveValidationHistorique($pilote, $dateDelivreeLe, $dateValideJusquAu);
+
 
         // Configurer Dompdf
         $options = new Options();
@@ -177,6 +184,33 @@ class PdfGenerator
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
     }
+    // Méthode pour sauvegarder les dates dans l'historique des validations
+// Méthode pour sauvegarder les dates dans l'historique des validations
+    private function saveValidationHistorique(Pilote $pilote, \DateTime $dateDelivree, ?\DateTime $dateValideJusquAu): void
+    {
+        // Rechercher si une validation avec les mêmes dates existe déjà pour ce pilote
+        $existingValidation = $this->entityManager->getRepository(ValidationHistorique::class)
+            ->findOneBy([
+                'pilote' => $pilote,
+                'dateDelivree' => $dateDelivree,
+                'dateValideJusquau' => $dateValideJusquAu
+            ]);
+
+        // Si une validation existe déjà avec les mêmes dates, ne pas enregistrer à nouveau
+        if ($existingValidation) {
+            return; // On ne fait rien, l'enregistrement existe déjà
+        }
+
+        // Si aucune validation identique n'existe, on enregistre la nouvelle
+        $historique = new ValidationHistorique();
+        $historique->setPilote($pilote);
+        $historique->setDateDelivree($dateDelivree);  // Date "Délivrée le"
+        $historique->setDateValideJusquau($dateValideJusquAu); // Date "Valide jusqu'au"
+
+        $this->entityManager->persist($historique);
+        $this->entityManager->flush();
+    }
+
 
 
 }

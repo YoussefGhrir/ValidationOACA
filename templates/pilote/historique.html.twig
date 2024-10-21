@@ -1,0 +1,74 @@
+{# templates/pilote/historique.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style> /* Style pour ajuster la taille du titre */
+        h2 {
+            font-size: 1.75rem; /* Taille réduite pour le titre */
+            color: #FFEBCD;
+            font-weight: bold;
+            text-align: center; /* Centrer le titre */
+            margin-bottom: 20px;
+        }</style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-mQ93mQ5P1rqFfwIzO5LCWIp7gG9+Pjm5BrL1A5zUVk5JQ02WR0Kt8fyOfN5PsWtn" crossorigin="anonymous">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="card card-custom">
+            <h2 style="color: #FFEBCD; font-weight: bold;">
+                Historique des validations pour
+                <span style="color: #00CED1; font-style: italic; font-weight: bold;">
+        {{ pilote.nom }} {{ pilote.prenom }}
+    </span>
+            </h2>
+
+            <div class="table-wrapper">
+                {% if historique is empty %}
+                    <div class="alert alert-warning text-center">
+                        <p>Aucune validation enregistrée pour ce pilote.</p>
+                    </div>
+                {% else %}
+                    <table class="table table-custom">
+                        <thead>
+                        <tr>
+                            <th>Délivrée le</th>
+                            <th>Valide jusqu'au</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {# Variables pour garder en mémoire les dernières dates affichées sous forme de chaînes de caractères #}
+                        {% set lastDateDelivree = null %}
+                        {% set lastDateValideJusquau = null %}
+
+                        {% for validation in historique %}
+                            {# Comparer les dates formatées pour éliminer les doublons #}
+                            {% set formattedDateDelivree = validation.dateDelivree|date('Y-m-d') %}
+                            {% set formattedDateValideJusquau = validation.dateValideJusquau|date('Y-m-d') %}
+
+                            {% if formattedDateDelivree != lastDateDelivree or formattedDateValideJusquau != lastDateValideJusquau %}
+                                <tr>
+                                    <td>{{ validation.dateDelivree|date('d/m/Y') }}</td>
+                                    <td>{{ validation.dateValideJusquau|date('d/m/Y') }}</td>
+                                </tr>
+                                {# Mise à jour des variables pour la prochaine validation #}
+                                {% set lastDateDelivree = formattedDateDelivree %}
+                                {% set lastDateValideJusquau = formattedDateValideJusquau %}
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76A9Y6xSLC7P3zE9BfFWFnZtKOuVZ6pcpD6m7IcvhF5NGHI3mcNczv5pztbGR1p"
+            crossorigin="anonymous"></script>
+{% endblock %}

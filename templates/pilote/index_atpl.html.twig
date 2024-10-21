@@ -71,15 +71,30 @@
             </span>
                                 </label>
                             </td>
-                            <td class="numero">{{ pilote.numero }}</td>
+                            <td class="numero">
+                                <!-- Bouton pour afficher l'historique avec icône -->
+                                <a href="{{ path('pilote_historique', { 'id': pilote.id }) }}"
+                                   class="btn btn-warning btn-sm"
+                                > <!-- Ouvre dans un nouvel onglet -->
+                                    <i class="bi bi-clock-history"></i> <!-- Icône de l'historique -->
+                                </a>
+
+                                {{ pilote.numero }}
+                            </td>
+
                             <td>{{ pilote.fonction }}</td>
                             <td class="nom">{{ pilote.nom }}</td>
                             <td class="prenom">{{ pilote.prenom }}</td>
                             <td>{{ pilote.pays }}</td>
                             <td class="firstdate">{{ pilote.firstdate|date('Y-m-d') }}</td>
                             <td>
+                                <!-- Bouton pour générer le PDF -->
                                 <a href="{{ path('pilote_generate_pdf', {id: pilote.id}) }}"
-                                   class="btn btn-dark btn-sm"><i class="fas fa-file-pdf"></i></a>
+                                   class="btn btn-dark btn-sm"
+                                   target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-file-pdf"></i>
+                                </a>
+
                                 <a href="{{ path('app_pilote_show', {'id': pilote.id}) }}" class="btn btn-info btn-sm">
                                     <i class="bi bi-eye"></i>
                                 </a>
@@ -95,6 +110,13 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
+                                <!-- Bouton pour afficher l'historique avec icône -->
+                                <a href="{{ path('pilote_historique', { 'id': pilote.id }) }}"
+                                   class="btn btn-warning btn-sm"
+                                > <!-- Ouvre dans un nouvel onglet -->
+                                    <i class="bi bi-clock-history"></i> <!-- Icône de l'historique -->
+                                </a>
+
                             </td>
                             <td class="createdBy">{{ pilote.createdBy.firstname }} {{ pilote.createdBy.lastname }}</td>
                         </tr>
@@ -115,8 +137,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             const toggleSwitches = document.querySelectorAll('.toggle-switch');
 
-            toggleSwitches.forEach(function(toggle) {
-                toggle.addEventListener('change', function() {
+            toggleSwitches.forEach(function (toggle) {
+                toggle.addEventListener('change', function () {
                     const isChecked = toggle.checked;
                     const piloteId = toggle.dataset.id; // Récupérer l'ID du pilote
 
@@ -213,8 +235,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             const toggleSwitches = document.querySelectorAll('.toggle-switch');
 
-            toggleSwitches.forEach(function(toggle) {
-                toggle.addEventListener('change', function() {
+            toggleSwitches.forEach(function (toggle) {
+                toggle.addEventListener('change', function () {
                     // Rafraîchir simplement la page
                     location.reload();
                 });

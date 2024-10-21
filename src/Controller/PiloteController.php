@@ -7,8 +7,10 @@ use App\Entity\Compagnie;
 use App\Entity\Pilote;
 use App\Form\PiloteType;
 use App\Repository\PiloteRepository;
+use App\Repository\ValidationHistoriqueRepository;
 use App\Service\PdfGenerator;
 use App\Service\PiloteStatusService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -110,13 +112,15 @@ class PiloteController extends AbstractController
         ]);
     }
 
+
+
     #[Route('/{id}/edit', name: 'app_pilote_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): Response
     {
         // Cloner l'entité Pilote pour conserver l'état avant modification
         $originalPilote = clone $pilote;
 
-        // Créer le formulaire en passant 'is_update' et 'default_type' pour le type actuel du pilote
+        // Création du formulaire avec les valeurs du pilote
         $form = $this->createForm(PiloteType::class, $pilote, [
             'is_update' => true,
             'default_type' => $pilote->getTypeLabel(), // Passer le type actuel comme valeur par défaut
@@ -133,7 +137,10 @@ class PiloteController extends AbstractController
 
             // Vérifier si le type a changé
             if ($oldType !== $newType) {
-                // Cloner l'original et conserver son ancien type
+                // 1. **Rétablir l'ancien type du pilote original** pour qu'il ne soit pas déplacé vers le nouveau type
+                $pilote->setType($oldType);  // Ne pas modifier le type de l'original
+
+                // 2. Créer une **nouvelle copie** du pilote avec le nouveau type
                 $copiedPilote = new Pilote();
 
                 // Copier les propriétés du pilote original
@@ -149,7 +156,7 @@ class PiloteController extends AbstractController
                 $copiedPilote->setDatequalif($originalPilote->getDatequalif() ? $originalPilote->getDatequalif()->format('Y-m-d') : null);
                 $copiedPilote->setDatelangue($originalPilote->getDatelangue() ? $originalPilote->getDatelangue()->format('Y-m-d') : null);
 
-                // Copier les autres propriétés
+                // Copier les autres propriétés sauf l'historique
                 $copiedPilote->setAvion($originalPilote->getAvion());
                 $copiedPilote->setPrivilegefr($originalPilote->getPrivilegefr());
                 $copiedPilote->setNationalite($originalPilote->getNationalite());
@@ -158,15 +165,20 @@ class PiloteController extends AbstractController
                 $copiedPilote->setPrivilegeag($originalPilote->getPrivilegeag());
                 $copiedPilote->setCreatedBy($originalPilote->getCreatedBy());
 
-                // S'assurer que la copie garde l'ancien type
-                $copiedPilote->setType($oldType);
+                // 3. **Changer le type de la copie** pour refléter le nouveau type
+                $copiedPilote->setType($newType);  // Le type modifié est attribué à la copie
 
-                // Persister la copie dans la base de données
+                // 4. **Réinitialiser l'historique des validations pour la copie** (historique vide)
+                $copiedPilote->setValidationHistoriques(new ArrayCollection()); // Historique vide pour la copie
+
+                // 5. Persister la nouvelle copie dans la base de données
                 $entityManager->persist($copiedPilote);
+
+                // Sauvegarder les modifications du pilote original avec le type inchangé
+                $entityManager->persist($pilote);
             }
 
-            // Sauvegarder les modifications du pilote avec le nouveau type
-            $entityManager->persist($pilote);
+            // Enregistrer toutes les modifications
             $entityManager->flush();
 
             // Ajouter un message flash de succès
@@ -182,7 +194,6 @@ class PiloteController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
 
     #[Route('/{id}', name: 'app_pilote_delete', methods: ['POST'])]
     public function delete(Request $request, Pilote $pilote, EntityManagerInterface $entityManager): Response
@@ -251,6 +262,17 @@ class PiloteController extends AbstractController
             return new JsonResponse(['success' => true]);
         }
 
+
         return new JsonResponse(['success' => false, 'error' => 'Statut non fourni'], 400);
+    }
+    #[Route('/pilote/{id}/historique', name: 'pilote_historique', methods: ['GET'])]
+    public function afficherHistorique(Pilote $pilote, ValidationHistoriqueRepository $historiqueRepository): Response
+    {
+        $historique = $historiqueRepository->findBy(['pilote' => $pilote]);
+
+        return $this->render('pilote/historique.html.twig', [
+            'pilote' => $pilote,
+            'historique' => $historique
+        ]);
     }
 }

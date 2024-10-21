@@ -1,0 +1,21 @@
+/* Style global pour centrer les dates dans toutes les colonnes */
+.table td, .table th {
+    text-align: center;  /* Centrage horizontal */
+    vertical-align: middle; /* Centrage vertical */
+}
+
+/* Style spécifique pour la colonne "1ère délivrance" */
+.highlight-delivrance th, .highlight-delivrance td {
+    background-color: #FEE440;
+    border: 2px solid #FFC107;
+    font-weight: bold;
+    padding: 10px;
+    color: #444;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+/* Ajustement de l'icône */
+.highlight-delivrance th i {
+    margin-right: 8px;
+}
