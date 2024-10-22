@@ -1,0 +1,81 @@
+/* Limiter la taille du carousel */
+.custom-carousel {
+    max-width: 90%; /* Limiter à 90% de la largeur de l'écran */
+    margin: 0 auto; /* Centrer le carousel */
+    position: relative;
+}
+
+/* Appliquer un dégradé homogène autour des images du carousel */
+.carousel-image-container {
+    position: relative; /* Permet l'application des pseudo-éléments */
+    overflow: hidden; /* S'assurer que les éléments sont bien cadrés */
+}
+
+.carousel-image-container img {
+    max-height: 450px; /* Définir une hauteur maximale */
+    object-fit: cover; /* S'assurer que l'image s'adapte bien sans déformation */
+    border-radius: 10px; /* Ajoute des coins arrondis */
+    width: 100%; /* Assurer que l'image prend toute la largeur du conteneur */
+    position: relative;
+    z-index: 1;
+}
+
+/* Ajouter un dégradé autour de l'image */
+.carousel-image-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent),
+    linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    z-index: -1;
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+/* Appliquer un dégradé homogène sur les côtés */
+.carousel-image-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent),
+    linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
+    z-index: -1;
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+/* Style pour les boutons du carousel */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: background-color 0.3s ease;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Icônes à l'intérieur des boutons */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-image: none;
+    font-size: 20px;
+    color: white;
+    line-height: 50px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+

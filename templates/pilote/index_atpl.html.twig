@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-
     {{ parent() }}
+
 {% endblock %}
+
 {% block body %}
     <div class="card shadow-lg p-3 mb-5 bg-light rounded">
         <div class="card-body">
@@ -11,7 +12,7 @@
 
             <!-- Search and Filter Form -->
             <form id="searchForm" class="mb-4">
-                <div class="row align-items-end">
+                <div class="row align-items-end justify-content-center">
                     <div class="col-md-2">
                         <label for="numeroSearch"></label><input type="text" id="numeroSearch" class="form-control"
                                                                  placeholder="Rechercher par numéro">
@@ -31,13 +32,11 @@
                     </div>
                     <div class="col-md-2">
                         <button type="button" id="resetFilter" class="btn bg-warning">
-                            <i class="bi bi-arrow-clockwise"></i> <!-- Icône de réinitialisation -->
+                            <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
                 </div>
-
             </form>
-
             <!-- Table Container -->
             <div class="table-wrapper" style="max-height: 400px; overflow-y: auto;">
                 <table class="table table-striped table-hover table-bordered">
@@ -55,54 +54,42 @@
                         <th scope="col">Ajouté par</th>
                     </tr>
                     </thead>
-                    <!-- Scrollable Table Body -->
                     <tbody id="pilotesTable">
                     {% for pilote in pilotes %}
                         <tr>
                             <td>
-                                <!-- Toggle switch avec texte '1 an' et '2 ans', initialisé selon le statut -->
                                 <label class="switch">
                                     <input type="checkbox" class="toggle-switch" data-row-id="row-{{ loop.index }}"
                                            data-id="{{ pilote.id }}"
                                             {% if pilote.statut %} checked {% endif %}>
                                     <span class="slider round">
-                <span class="switch-text-on">1 an</span>
-                <span class="switch-text-off">2 ans</span>
-            </span>
+                                        <span class="switch-text-on">1 an</span>
+                                        <span class="switch-text-off">2 ans</span>
+                                    </span>
                                 </label>
                             </td>
                             <td class="numero">
-                                <!-- Conteneur flex pour un alignement vertical centré -->
                                 <div style="display: flex; align-items: center;">
-                                    <!-- Bouton pour afficher l'historique avec icône -->
                                     <a href="{{ path('pilote_historique', { 'id': pilote.id }) }}"
                                        class="btn btn-warning btn-sm"
                                        target="_blank"
-                                       style="margin-right: 10px; display: flex; align-items: center;">  <!-- Ajustement du bouton -->
+                                       style="margin-right: 10px; display: flex; align-items: center;">
                                         <i class="bi bi-clock-history"></i>
                                     </a>
-
-                                    <!-- Numéro du pilote -->
                                     <span>{{ pilote.numero }}</span>
                                 </div>
                             </td>
-
-
-
-
                             <td>{{ pilote.fonction }}</td>
                             <td class="nom">{{ pilote.nom }}</td>
                             <td class="prenom">{{ pilote.prenom }}</td>
                             <td>{{ pilote.pays }}</td>
                             <td class="firstdate">{{ pilote.firstdate|date('Y-m-d') }}</td>
                             <td>
-                                <!-- Bouton pour générer le PDF -->
                                 <a href="{{ path('pilote_generate_pdf', {id: pilote.id}) }}"
                                    class="btn btn-dark btn-sm"
                                    target="_blank" rel="noopener noreferrer">
                                     <i class="fas fa-file-pdf"></i>
                                 </a>
-
                                 <a href="{{ path('app_pilote_show', {'id': pilote.id}) }}" class="btn btn-info btn-sm">
                                     <i class="bi bi-eye"></i>
                                 </a>
@@ -118,13 +105,10 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
-                                <!-- Bouton pour afficher l'historique avec icône -->
                                 <a href="{{ path('pilote_historique', { 'id': pilote.id }) }}"
-                                   class="btn btn-warning btn-sm"
-                                > <!-- Ouvre dans un nouvel onglet -->
-                                    <i class="bi bi-clock-history"></i> <!-- Icône de l'historique -->
+                                   class="btn btn-warning btn-sm">
+                                    <i class="bi bi-clock-history"></i>
                                 </a>
-
                             </td>
                             <td class="createdBy">{{ pilote.createdBy.firstname }} {{ pilote.createdBy.lastname }}</td>
                         </tr>
@@ -138,118 +122,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const toggleSwitches = document.querySelectorAll('.toggle-switch');
-
-            toggleSwitches.forEach(function (toggle) {
-                toggle.addEventListener('change', function () {
-                    const isChecked = toggle.checked;
-                    const piloteId = toggle.dataset.id; // Récupérer l'ID du pilote
-
-                    // Envoi de la requête AJAX pour mettre à jour le statut et ajuster la firstdate
-                    fetch('{{ path('update_statut_and_date', {'id': 'piloteId'}) }}'.replace('piloteId', piloteId), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': '{{ csrf_token('update_statut_and_date') }}'
-                        },
-                        body: JSON.stringify({
-                            statut: isChecked // Envoyer le nouveau statut
-                        })
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Erreur lors de la mise à jour du statut.');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                console.log('Statut et firstdate mis à jour avec succès');
-                            } else {
-                                console.error('Erreur côté serveur : ', data.error);
-                                alert('Une erreur s\'est produite : ' + data.error);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Erreur:', error);
-                            alert('Une erreur s\'est produite lors de la mise à jour du statut.');
-                        });
-                });
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const numeroSearch = document.getElementById('numeroSearch');
-            const nomSearch = document.getElementById('nomSearch');
-            const prenomSearch = document.getElementById('prenomSearch');
-            const dateFilter = document.getElementById('dateFilter');
-            const resetFilter = document.getElementById('resetFilter');
-            const pilotesTable = document.getElementById('pilotesTable');
-            const rows = pilotesTable.querySelectorAll('tr');
-
-            // Fonction pour filtrer les résultats en fonction des critères
-            function filterPilotes() {
-                const numeroValue = numeroSearch.value.toLowerCase();
-                const nomValue = nomSearch.value.toLowerCase();
-                const prenomValue = prenomSearch.value.toLowerCase();
-                const dateValue = dateFilter.value;
-
-                rows.forEach(row => {
-                    const numero = row.querySelector('.numero').textContent.toLowerCase();
-                    const nom = row.querySelector('.nom').textContent.toLowerCase();
-                    const prenom = row.querySelector('.prenom').textContent.toLowerCase();
-                    const firstDate = row.querySelector('.firstdate').textContent;
-
-                    // Vérifier si les critères correspondent
-                    const numeroMatch = numero.includes(numeroValue);
-                    const nomMatch = nom.includes(nomValue);
-                    const prenomMatch = prenom.includes(prenomValue);
-                    const dateMatch = !dateValue || firstDate === dateValue;
-
-                    // Afficher ou masquer la ligne en fonction des critères
-                    if (numeroMatch && nomMatch && prenomMatch && dateMatch) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-
-            // Filtrage lorsque l'utilisateur tape dans les champs de recherche
-            numeroSearch.addEventListener('input', filterPilotes);
-            nomSearch.addEventListener('input', filterPilotes);
-            prenomSearch.addEventListener('input', filterPilotes);
-            dateFilter.addEventListener('input', filterPilotes);
-
-            // Réinitialiser les filtres
-            resetFilter.addEventListener('click', function () {
-                numeroSearch.value = '';
-                nomSearch.value = '';
-                prenomSearch.value = '';
-                dateFilter.value = '';
-                filterPilotes();
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const toggleSwitches = document.querySelectorAll('.toggle-switch');
-
-            toggleSwitches.forEach(function (toggle) {
-                toggle.addEventListener('change', function () {
-                    // Rafraîchir simplement la page
-                    location.reload();
-                });
-            });
-        });
-    </script>
-
 {% endblock %}

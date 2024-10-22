@@ -3,14 +3,12 @@ body {
     background-color: #f4f8fb;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 h2 {
     font-weight: 600;
     color: #ffffff;
     text-align: center;
     margin-bottom: 10px; /* Réduire l'espace entre le titre et le tableau */
 }
-
 /* Card styles */
 .card-custom {
     background-color: #0056b3; /* Bleu plus subtil */
@@ -21,7 +19,6 @@ h2 {
     max-width: 900px;
     margin: 0 auto; /* Center the card */
 }
-
 /* Table styles */
 .table-wrapper {
     max-height: 400px; /* Fixe une hauteur pour activer le scroll */
@@ -29,7 +26,6 @@ h2 {
     border-radius: 10px;
     background-color: #004080; /* Darker blue background for the table */
 }
-
 .table-custom {
     width: 100%;
     border-collapse: collapse;
@@ -38,32 +34,26 @@ h2 {
     color: white;
     font-weight: bold;
 }
-
 .table-custom th, .table-custom td {
     padding: 12px;
     border-bottom: 1px solid #ffffff;
     text-align: center; /* Centrer le texte dans les cellules et en-têtes */
 }
-
 /* Hover effect for rows */
 .table-custom tr:hover {
     background-color: #0052cc;
 }
-
 /* Scrollbar customization */
 .table-wrapper::-webkit-scrollbar {
     width: 10px;
 }
-
 .table-wrapper::-webkit-scrollbar-thumb {
     background-color: #007bff;
     border-radius: 10px;
 }
-
 .table-wrapper::-webkit-scrollbar-track {
     background-color: #003366;
 }
-
 /* Fix header while scrolling */
 .table-custom th {
     position: sticky;
@@ -71,7 +61,6 @@ h2 {
     background-color: #003366;
     z-index: 10;
 }
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .table-custom th, .table-custom td {
