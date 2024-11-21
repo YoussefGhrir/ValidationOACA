@@ -1,5 +1,4 @@
 <?php
-// src/Service/PdfGenerator.php
 
 namespace App\Service;
 
@@ -108,20 +107,16 @@ class PdfGenerator
 
         // Si le type est ATPL, appliquer les règles spécifiques
         if ($pilote->getTypeLabel() === 'ATPL' && $firstDate) {
-            // Date limite pour ATPL : 2 ans après la date de première délivrance
             $twoYearsAfterFirstDate = (clone $firstDate)->modify('+2 years');
             $oneYearAfterFirstDate = (clone $firstDate)->modify('+1 year');
 
-            // Si datelangue et datequalif sont toutes les deux après 1 an de firstDate
             if (
                 ($datelangue && $datelangue > $oneYearAfterFirstDate) &&
                 ($datequalif && $datequalif > $oneYearAfterFirstDate)
             ) {
-                // Fixer la date de validité à 1 an après la première délivrance
                 $dateValideJusquAu = $oneYearAfterFirstDate;
-                $isBeyondOneYear = true; // Indiquer que les dates ont dépassé la limite d'un an
+                $isBeyondOneYear = true;
             } else {
-                // Sinon, prendre la date la plus proche entre datelangue et datequalif
                 $validDates = array_filter([$datelangue, $datequalif], function ($date) use ($twoYearsAfterFirstDate) {
                     return $date <= $twoYearsAfterFirstDate;
                 });
@@ -129,13 +124,11 @@ class PdfGenerator
                 if (!empty($validDates)) {
                     $dateValideJusquAu = min($validDates);
                 } else {
-                    // Si aucune date n'est valide, on limite à 1 an après la première délivrance
                     $dateValideJusquAu = $oneYearAfterFirstDate;
-                    $isBeyondOneYear = true; // Indiquer que les dates ont dépassé la limite d'un an
+                    $isBeyondOneYear = true;
                 }
             }
         } else {
-            // Pour le type CPL ou si le type n'est pas défini, prendre la date la plus ancienne entre datelangue et datequalif
             if ($datelangue && $datequalif) {
                 $dateValideJusquAu = min($datelangue, $datequalif);
             } elseif ($datelangue) {
@@ -145,21 +138,22 @@ class PdfGenerator
             }
         }
 
-        // Ajouter la date minimale au template (formatée si nécessaire)
-        $data['valide_jusquau'] = $dateValideJusquAu ? $dateValideJusquAu->format('d/m/Y') : 'Non défini';
-        $data['is_beyond_one_year'] = $isBeyondOneYear; // Ajouter l'indicateur au template
+        // Réduire d'un jour la date finale
+        if ($dateValideJusquAu) {
+            $dateValideJusquAu->modify('-1 day');
+            $data['valide_jusquau'] = $dateValideJusquAu->format('d/m/Y');
+        } else {
+            $data['valide_jusquau'] = 'Non défini';
+        }
 
-        // Ajouter les privilèges au template
+        $data['is_beyond_one_year'] = $isBeyondOneYear;
+
         $data['privilegefr'] = $pilote->getPrivilegefr() ?? '';
         $data['privilegeag'] = $pilote->getPrivilegeag() ?? '';
-        // Capturer la date actuelle pour "Délivrée le"
         $dateDelivreeLe = new \DateTime();
 
-        // Enregistrer les dates dans l'historique
         $this->saveValidationHistorique($pilote, $dateDelivreeLe, $dateValideJusquAu);
 
-
-        // Configurer Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', true);
@@ -170,25 +164,20 @@ class PdfGenerator
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        // Générer le nom de fichier basé sur le type et le nom du pilote
         $type = strtoupper($pilote->getType());
         $name = ucfirst($pilote->getNom());
         $filename = sprintf('%s-%s.pdf', $type, $name);
 
-        // Sortie du PDF
         $pdfOutput = $dompdf->output();
 
-        // Retourner le PDF comme réponse avec le nom de fichier dynamique
         return new Response($pdfOutput, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
     }
-    // Méthode pour sauvegarder les dates dans l'historique des validations
-// Méthode pour sauvegarder les dates dans l'historique des validations
+
     private function saveValidationHistorique(Pilote $pilote, \DateTime $dateDelivree, ?\DateTime $dateValideJusquAu): void
     {
-        // Rechercher si une validation avec les mêmes dates existe déjà pour ce pilote
         $existingValidation = $this->entityManager->getRepository(ValidationHistorique::class)
             ->findOneBy([
                 'pilote' => $pilote,
@@ -196,21 +185,16 @@ class PdfGenerator
                 'dateValideJusquau' => $dateValideJusquAu
             ]);
 
-        // Si une validation existe déjà avec les mêmes dates, ne pas enregistrer à nouveau
         if ($existingValidation) {
-            return; // On ne fait rien, l'enregistrement existe déjà
+            return;
         }
 
-        // Si aucune validation identique n'existe, on enregistre la nouvelle
         $historique = new ValidationHistorique();
         $historique->setPilote($pilote);
-        $historique->setDateDelivree($dateDelivree);  // Date "Délivrée le"
-        $historique->setDateValideJusquau($dateValideJusquAu); // Date "Valide jusqu'au"
+        $historique->setDateDelivree($dateDelivree);
+        $historique->setDateValideJusquau($dateValideJusquAu);
 
         $this->entityManager->persist($historique);
         $this->entityManager->flush();
     }
-
-
-
 }

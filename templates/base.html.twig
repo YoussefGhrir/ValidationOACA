@@ -9,12 +9,14 @@
     <title>OACA autorisation</title>
 
     {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('design/css/login.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/status.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/msg.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/icons.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/historique.css') }}">
         <link rel="stylesheet" href="{{ asset('design/css/date.css') }}">
+
         <!-- Flatpickr CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -341,6 +343,7 @@
         });
     });
 </script>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 {% endblock %}
 </body>
 </html>

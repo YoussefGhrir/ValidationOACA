@@ -11,6 +11,86 @@
     <link href="{{ asset('assets/css/animate.css') }}" rel="stylesheet"/>
     <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet"/>
     <link href="{{ asset('assets/css/app-style.css') }}" rel="stylesheet"/>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0d47a1 0%, #1976d2 50%, #ffd700 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .card-authentication1 {
+            width: 80%; /* Agrandir horizontalement */
+            max-width: 900px; /* Limite pour éviter une trop grande largeur */
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            background: #0d47a1;
+            color: white;
+        }
+
+        .card-content {
+            padding: 40px;
+        }
+
+        .logo-icon {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            background-color: #ffd700;
+            padding: 10px;
+        }
+
+        .btn-light {
+            background-color: #ffd700;
+            color: #0d47a1;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: 0.3s;
+        }
+
+        .btn-light:hover {
+            background-color: #ffc107;
+            color: #0d47a1;
+        }
+
+        .input-shadow {
+            border: none;
+            border-radius: 30px;
+            padding: 12px 20px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-control-position {
+            color: #ffd700;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #ffd700;
+        }
+
+        .moving-message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            animation: moveText 5s infinite;
+            margin-bottom: 40px;
+        }
+
+        @keyframes moveText {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -18,7 +98,7 @@
 
     <!-- Message de bienvenue -->
     <div class="moving-message">
-        <span>BIENVENUE AU GESTION DES VALIDATION DES PILOTES</span>
+        BIENVENUE AU GESTION DES VALIDATIONS DES PILOTES
     </div>
 
     <main id="main" class="main">
@@ -26,13 +106,12 @@
         <div id="wrapper">
             <div class="card card-authentication1 mx-auto my-5">
                 <div class="card-body">
-                    <div class="card-content p-2">
+                    <div class="card-content">
                         <div class="text-center">
-                            <img src="{{ asset('design/images/logo-icon.png') }}" class="logo-icon" alt="logo icon"
-                                 style="width: 80px; height: 80px; border-radius:30%; margin-bottom: 20px;">
+                            <img src="{{ asset('design/images/logo-icon.png') }}" class="logo-icon" alt="logo icon">
                         </div>
-                        <div class="text-center">
-                            <div class="card-title text-uppercase py-3">Se Connecter</div>
+                        <div class="text-center mt-3">
+                            <div class="card-title text-uppercase">Se Connecter</div>
                         </div>
 
                         <form method="post" action="{{ path('app_login') }}">
@@ -45,16 +124,16 @@
                             {% if app.user %}
                                 <div class="mb-3">
                                     Vous êtes connecté en tant que {{ app.user.userIdentifier }},
-                                    <a href="{{ path('app_logout') }}">Déconnexion</a>
+                                    <a href="{{ path('app_logout') }}" class="text-warning">Déconnexion</a>
                                 </div>
                             {% endif %}
 
                             <div class="form-group">
-                                <label for="inputEmail" class="sr-only">Email</label>
+                                <label for="inputEmail">Email</label>
                                 <div class="position-relative has-icon-right">
                                     <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
                                            class="form-control input-shadow" autocomplete="email" required autofocus
-                                           placeholder="Entrer Email">
+                                           placeholder="Entrer votre email">
                                     <div class="form-control-position">
                                         <i class="icon-envelope"></i>
                                     </div>
@@ -62,11 +141,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="inputPassword" class="sr-only">Mot de passe</label>
+                                <label for="inputPassword">Mot de passe</label>
                                 <div class="position-relative has-icon-right">
                                     <input type="password" name="password" id="inputPassword"
                                            class="form-control input-shadow" autocomplete="current-password" required
-                                           placeholder="Entrer mot de passe">
+                                           placeholder="Entrer votre mot de passe">
                                     <div class="form-control-position">
                                         <i class="icon-lock"></i>
                                     </div>
@@ -82,22 +161,26 @@
                                         <label for="user-checkbox">Mémoriser</label>
                                     </div>
                                 </div>
+                                <div class="form-group col-6 text-right">
+                                    <a href="#" class="text-warning">Mot de passe oublié ?</a>
+                                </div>
                             </div>
 
-                            <button type="submit" class="btn btn-light btn-block">Se connecter !</button>
+                            <button type="submit" class="btn btn-light btn-block">Se connecter</button>
 
                             <div id="login-response" class="text-center mt-3"></div>
                         </form>
                     </div>
                 </div>
             </div>
-        </div><!--wrapper-->
+        </div>
     </main>
 {% endblock %}
+
 {% block script %}
     {{ parent() }}
-
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
