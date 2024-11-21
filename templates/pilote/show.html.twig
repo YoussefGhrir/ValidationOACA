@@ -20,16 +20,19 @@
                             </h5>
 
                             <!-- Ajouter le toggle switch ici sous le titre -->
-                            <div class="d-flex justify-content-center mb-4">
-                                <label class="switch">
-                                    <input type="checkbox" class="toggle-switch" data-id="{{ pilote.id }}"
-                                            {% if pilote.statut %} checked {% endif %}>
-                                    <span class="slider round">
-                                        <span class="switch-text-on">1 an</span>
-                                        <span class="switch-text-off">2 ans</span>
-                                    </span>
-                                </label>
-                            </div>
+                            {% if pilote.type is same as(false) %}
+                                <div class="d-flex justify-content-center mb-4">
+                                    <label class="switch">
+                                        <input type="checkbox" class="toggle-switch" data-id="{{ pilote.id }}"
+                                                {% if pilote.statut %} checked {% endif %}>
+                                        <span class="slider round">
+                <span class="switch-text-on">1 an</span>
+                <span class="switch-text-off">2 ans</span>
+            </span>
+                                    </label>
+                                </div>
+                            {% endif %}
+
 
                             <!-- Left and Right Section Layout -->
                             <div class="row">

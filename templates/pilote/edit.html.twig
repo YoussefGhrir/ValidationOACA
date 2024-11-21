@@ -193,7 +193,7 @@
                                     <a href="{{ path('app_pilote_cpl') }}" class="btn btn-warning btn-lg">
                                         <i class="fas fa-arrow-left"></i> Retour à la liste CPL
                                     </a>
-                                {% elseif pilote.type is null %}
+                                {% elseif pilote.type is same as(null) %}
                                     <a href="{{ path('app_pilote_double') }}" class="btn btn-warning btn-lg">
                                         <i class="fas fa-arrow-left"></i> Retour à la liste DOUBLE
                                     </a>
