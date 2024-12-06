@@ -8,7 +8,12 @@
         .alert {
             transition: opacity 1s ease-out;
         }
-
+        .is-invalid {
+            border-color: #dc3545;
+        }
+        .invalid-feedback {
+            color: #dc3545;
+        }
     </style>
 {% endblock %}
 
@@ -17,7 +22,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <!-- Affichage des messages flashs -->
+                <!-- Affichage des messages flash -->
                 {% for label, messages in app.flashes %}
                     <div class="alert alert-{{ label }} alert-dismissible fade show flash-message" role="alert">
                         {% for message in messages %}
@@ -33,17 +38,19 @@
                             <div class="col-md-6">
                                 <!-- Form Fields in Left Column -->
                                 <div class="form-group mb-3 custom-radio-group">
-                                    {{ form_row(form.type, {
-                                        'label': 'Nature de Licence',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.type) }}
+                                    {{ form_widget(form.type, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.type.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.type) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
                                     {{ form_label(form.numero) }}
                                     {{ form_widget(form.numero, {
-                                        'attr': {
-                                            'class': 'form-control form-control-custom ' ~ (form.numero.vars.errors|length > 0 ? 'is-invalid' : '')
-                                        }
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.numero.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
                                     <div class="invalid-feedback">
                                         {{ form_errors(form.numero) }}
@@ -51,108 +58,160 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.fonction, {
-                                        'label': 'Fonction à Bord',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.fonction) }}
+                                    {{ form_widget(form.fonction, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.fonction.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.fonction) }}
+                                    </div>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.nom, {
-                                        'label': 'Nom',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.nom) }}
+                                    {{ form_widget(form.nom, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.nom.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
-                                </div>
-                                <div class="form-group mb-3">
-                                    {{ form_row(form.prenom, {
-                                        'label': 'Prénom',
-                                        'attr': {'class': 'form-control form-control-custom'}
-                                    }) }}
-                                </div>
-                                <div class="form-group mb-3">
-                                    {{ form_row(form.datebirth, {
-                                        'label': 'Date de naissance',
-                                        'attr': {'class': 'form-control datepicker form-control-custom'}
-                                    }) }}
-                                </div>
-                                <div class="form-group mb-3">
-                                    {{ form_row(form.avion, {
-                                        "label": "Type d'Avion",
-                                        "attr": {"class": "form-control form-control-custom"}
-                                    }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.nom) }}
+                                    </div>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.privilegefr, {
-                                        'label': 'Privilège en français',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.prenom) }}
+                                    {{ form_widget(form.prenom, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.prenom.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.prenom) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    {{ form_label(form.datebirth) }}
+                                    {{ form_widget(form.datebirth, {
+                                        'attr': {'class': 'form-control datepicker form-control-custom ' ~ (form.datebirth.vars.errors|length > 0 ? 'is-invalid' : '')}
+                                    }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.datebirth) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    {{ form_label(form.avion) }}
+                                    {{ form_widget(form.avion, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.avion.vars.errors|length > 0 ? 'is-invalid' : '')}
+                                    }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.avion) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    {{ form_label(form.privilegefr) }}
+                                    {{ form_widget(form.privilegefr, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.privilegefr.vars.errors|length > 0 ? 'is-invalid' : '')}
+                                    }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.privilegefr) }}
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <!-- Form Fields in Right Column -->
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.nationalite, {
-                                        'label': 'Nationalité',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.nationalite) }}
+                                    {{ form_widget(form.nationalite, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.nationalite.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.nationalite) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.pays, {
-                                        'label': 'Pays',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.pays) }}
+                                    {{ form_widget(form.pays, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.pays.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.pays) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.firstdate, {
-                                        'label': '1ère Délivrance',
-                                        'attr': {'class': 'form-control datepicker form-control-custom'}
+                                    {{ form_label(form.firstdate) }}
+                                    {{ form_widget(form.firstdate, {
+                                        'attr': {'class': 'form-control datepicker form-control-custom ' ~ (form.firstdate.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.firstdate) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.validite, {
-                                        'label': 'Délivrée le',
-                                        'attr': {'class': 'form-control datepicker form-control-custom'}
+                                    {{ form_label(form.validite) }}
+                                    {{ form_widget(form.validite, {
+                                        'attr': {'class': 'form-control datepicker form-control-custom ' ~ (form.validite.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.validite) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.datequalif, {
-                                        'label': 'Validité de la Qualification',
-                                        'attr': {'class': 'form-control datepicker form-control-custom'}
+                                    {{ form_label(form.datequalif) }}
+                                    {{ form_widget(form.datequalif, {
+                                        'attr': {'class': 'form-control datepicker form-control-custom ' ~ (form.datequalif.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.datequalif) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.datelangue, {
-                                        'label': 'Validité linguistique',
-                                        'attr': {'class': 'form-control datepicker form-control-custom'}
+                                    {{ form_label(form.datelangue) }}
+                                    {{ form_widget(form.datelangue, {
+                                        'attr': {'class': 'form-control datepicker form-control-custom ' ~ (form.datelangue.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.datelangue) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.compagnie, {
-                                        'label': 'Compagnie',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.compagnie) }}
+                                    {{ form_widget(form.compagnie, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.compagnie.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.compagnie) }}
+                                    </div>
                                 </div>
+
                                 <div class="form-group mb-3">
-                                    {{ form_row(form.privilegeag, {
-                                        'label': 'Privilège en anglais',
-                                        'attr': {'class': 'form-control form-control-custom'}
+                                    {{ form_label(form.privilegeag) }}
+                                    {{ form_widget(form.privilegeag, {
+                                        'attr': {'class': 'form-control form-control-custom ' ~ (form.privilegeag.vars.errors|length > 0 ? 'is-invalid' : '')}
                                     }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.privilegeag) }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col d-flex justify-content-between">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fas fa-plus"></i> Créer
-                        </button>
-                        <a href="{{ path('app_home') }}" class="btn btn-warning btn-lg">
-                            <i class="fas fa-home"></i> Retour à la page d'accueil
-                        </a>
+                        <div class="col d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-plus"></i> Créer
+                            </button>
+                            <a href="{{ path('app_home') }}" class="btn btn-warning btn-lg">
+                                <i class="fas fa-home"></i> Retour à la page d'accueil
+                            </a>
+                        </div>
+                        {{ form_end(form) }}
                     </div>
                 </div>
-                {{ form_end(form) }}
             </div>
         </div>
     </div>
@@ -164,9 +223,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr(".datepicker", {
-                dateFormat: "Y-m-d",  // Format de la date
-                allowInput: true,      // Permettre la saisie manuelle
-                clickOpens: true       // Le calendrier s\'ouvre en cliquant (ne bloque pas la saisie) - Escaped the single quote
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                clickOpens: true
             });
         });
     </script>

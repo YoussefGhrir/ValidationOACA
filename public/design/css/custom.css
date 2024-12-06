@@ -83,13 +83,19 @@
 }
 /* custom.css */
 .card {
-    width: 100%; /* Assure que la carte utilise toute la largeur de son conteneur */
-    max-width: 100%; /* Évite toute restriction de largeur maximale */
-    margin: 0 auto; /* Centre la carte dans son conteneur */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card-body {
-    padding: 2rem; /* Augmente l'espace intérieur de la carte */
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1 1 calc(50% - 10px); /* Ajuste la largeur pour deux colonnes */
+    margin: 10px;
 }
 
 .table {
@@ -222,4 +228,6 @@ html, body {
     color: #dc3545; /* Rouge */
     font-size: 0.875rem; /* Taille du texte légèrement réduite */
     margin-top: 0.25rem;
+    display: block;
+    min-height: 20px;
 }
