@@ -4,17 +4,7 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('design/css/custom.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-    <style>
-        .alert {
-            transition: opacity 1s ease-out;
-        }
-        .is-invalid {
-            border-color: #dc3545;
-        }
-        .invalid-feedback {
-            color: #dc3545;
-        }
-    </style>
+
 {% endblock %}
 
 {% block body %}
@@ -46,7 +36,15 @@
                                         {{ form_errors(form.type) }}
                                     </div>
                                 </div>
-
+                                <div class="form-group mb-3">
+                                    {{ form_label(form.datelicence) }}
+                                    {{ form_widget(form.datelicence, {
+                                        'attr': {'class': 'form-control datepicker form-control-custom ' ~ (form.datelicence.vars.errors|length > 0 ? 'is-invalid' : '')}
+                                    }) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(form.datelicence) }}
+                                    </div>
+                                </div>
                                 <div class="form-group mb-3">
                                     {{ form_label(form.numero) }}
                                     {{ form_widget(form.numero, {

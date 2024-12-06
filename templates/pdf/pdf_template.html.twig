@@ -184,7 +184,7 @@
                 style="font-size:13pt; ">Pays de la licence :</span></strong><strong><span style="font-size:13pt; ">&#xa0; </span></strong>{{ pilote.pays }}
 </p>
 <p style="font-size:14pt">
-    <em><span style="font-size:13pt; ">Licence type</span></em><em><span
+    <em><span style="font-size:13pt; ">(Licence Type)</span></em><em><span
                 style="width:5.48pt; font-size:13pt; display:inline-block">&#xa0;</span></em><em><span
                 style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></em><em><span
                 style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></em><em><span
@@ -195,13 +195,20 @@
                 style="font-size:13pt; ">&#xa0; </span></em><em><span
                 style="width:28.9pt; font-size:13pt; display:inline-block">&#xa0;</span></em><em><span
                 style="width:35.4pt; font-size:13pt; display:inline-block">&#xa0;</span></em><em><span
-                style="font-size:13pt; ">(Licensing country)</span></em><em><span style="font-size:13pt; ">&#xa0;</span></em><em><span
+                style="font-size:13pt; ">(Licensing Country)</span></em><em><span style="font-size:13pt; ">&#xa0;</span></em><em><span
                 style="font-size:13pt; "> </span></em>
 </p>
-<p style="font-size:13pt">
-    <strong>&#xa0;</strong>
-</p>
+<p style="font-size:14pt">
+    <strong><span style="font-size:13pt;">Date de la licence</span></strong><strong><span
+                style="width:25.31pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span
+                style="font-size:13pt;">:</span></strong><strong><span
+                style="font-size:13pt;">&#xa0;&#xa0;&#xa0; </span></strong>
+    {{ pilote.datelicence ? pilote.datelicence|date('d/m/Y') : 'Non définie' }}
 
+</p>
+<p style="font-size:13pt">
+    <em>(License Date) </em>
+</p>
 <p style="font-size:14pt">
     <strong><span style="font-size:13pt; ">Numéro</span></strong><strong><span
                 style="width:25.31pt; font-size:13pt; display:inline-block">&#xa0;</span></strong><strong><span
@@ -225,10 +232,7 @@
                 style="width:35.4pt; display:inline-block">&#xa0;</span></em><em><span
                 style="width:35.4pt; display:inline-block">&#xa0;</span></em><em><span
                 style="width:35.4pt; display:inline-block">&#xa0;</span></em><em>&#xa0;&#xa0; </em><em><span
-                style="width:25.65pt; display:inline-block">&#xa0;</span></em><em> (Valid until)</em><em>&#xa0;</em>
-</p>
-<p style="font-size:13pt">
-    <strong>&#xa0;</strong>
+                style="width:25.65pt; display:inline-block">&#xa0;</span></em><em> (Valid Until)</em><em>&#xa0;</em>
 </p>
 <p style="font-family: DejaVu Sans,serif">
     <strong>Fonction à bord :</strong><strong><span style="width:6.53pt; display:inline-block">&#xa0;</span></strong>

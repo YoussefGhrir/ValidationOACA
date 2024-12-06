@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
+use App\Entity\Ministere;
 use App\Entity\ValidationHistorique;
+use App\Entity\Directeur;
+use App\Entity\Pilote;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Directeur;
-use App\Entity\Ministere;
-use App\Entity\Pilote;
 
 class PdfGenerator
 {
-    private $twig;
+    private Environment $twig;
     private EntityManagerInterface $entityManager;
-    private $counterFile = 'counter.txt'; // Fichier pour stocker le compteur global
+    private string $counterFile = 'counter.txt'; // Fichier pour stocker le compteur global
 
     public function __construct(Environment $twig, EntityManagerInterface $entityManager)
     {
@@ -29,124 +31,67 @@ class PdfGenerator
     {
         $year = date('Y'); // Année en cours
 
-        // Vérifier si le pilote a déjà un numéro de PDF
         if ($pilote->getPdfNumber() === null) {
-            // Si le pilote n'a pas de numéro, obtenir le prochain numéro global
             $pdfNumber = $this->getNextGlobalPdfNumber();
             $pilote->setPdfNumber($pdfNumber);
-
-            // Sauvegarder le numéro de PDF pour le pilote
             $this->entityManager->persist($pilote);
             $this->entityManager->flush();
         } else {
-            // Utiliser le numéro déjà assigné
             $pdfNumber = $pilote->getPdfNumber();
         }
 
-        // Formatter le compteur avec 3 chiffres (ex: 001, 002, ...)
-        $formattedCounter = str_pad($pdfNumber, 3, '0', STR_PAD_LEFT);
+        $formattedCounter = str_pad((string)$pdfNumber, 3, '0', STR_PAD_LEFT);
 
         return [$formattedCounter, $year];
     }
 
-    // Méthode pour récupérer le compteur global actuel et l'incrémenter
     private function getNextGlobalPdfNumber(): int
     {
-        // Récupérer le compteur actuel depuis le fichier
         $counter = $this->getCurrentCounter();
-
-        // Incrémenter le compteur, le remettre à 000 si on atteint 999
         $counter = ($counter + 1) % 1000;
-
-        // Mettre à jour le fichier avec le nouveau compteur
         $this->updateCounter($counter);
 
         return $counter;
     }
 
-    // Méthode pour récupérer le compteur actuel depuis le fichier
     private function getCurrentCounter(): int
     {
         if (file_exists($this->counterFile)) {
             return (int)file_get_contents($this->counterFile);
         }
 
-        // Si le fichier n'existe pas, retourner 0
         return 0;
     }
 
-    // Méthode pour mettre à jour le compteur dans le fichier
     private function updateCounter(int $counter): void
     {
-        file_put_contents($this->counterFile, $counter);
+        file_put_contents($this->counterFile, (string)$counter);
     }
 
-    public function generatePdf(Pilote $pilote, $template, $data): Response
+    public function generatePdf(Pilote $pilote, string $template, array $data): Response
     {
-        // Récupérer tous les directeurs
+        // Récupération des directeurs depuis l'entité Directeur
         $directeurs = $this->entityManager->getRepository(Directeur::class)->findAll();
         $data['directeurs'] = $directeurs;
-
-        // Récupérer tous les ministères (si nécessaire)
         $ministeres = $this->entityManager->getRepository(Ministere::class)->findAll();
-        $data['ministeres'] = $ministeres;
+        $data['ministeres'] = $directeurs;
 
-        // Récupérer le numéro et l'année pour le pilote
         [$formattedCounter, $year] = $this->getNumberAndYearForPilote($pilote);
         $data['numero_pdf'] = $formattedCounter;
         $data['current_year'] = $year;
 
-        // Récupérer les dates de qualification et de langue
         $datelangue = $pilote->getDatelangue();
         $datequalif = $pilote->getDatequalif();
         $firstDate = $pilote->getFirstdate();
 
-        // Initialiser la date de validité
-        $dateValideJusquAu = null;
-        $isBeyondOneYear = false; // Indicateur pour savoir si les dates dépassent la limite d'un an
+        $dateValideJusquAu = $this->calculateDateValideJusquAu($pilote, $datelangue, $datequalif, $firstDate);
 
-        // Si le type est ATPL, appliquer les règles spécifiques
-        if ($pilote->getTypeLabel() === 'ATPL' && $firstDate) {
-            $twoYearsAfterFirstDate = (clone $firstDate)->modify('+2 years');
-            $oneYearAfterFirstDate = (clone $firstDate)->modify('+1 year');
-
-            if (
-                ($datelangue && $datelangue > $oneYearAfterFirstDate) &&
-                ($datequalif && $datequalif > $oneYearAfterFirstDate)
-            ) {
-                $dateValideJusquAu = $oneYearAfterFirstDate;
-                $isBeyondOneYear = true;
-            } else {
-                $validDates = array_filter([$datelangue, $datequalif], function ($date) use ($twoYearsAfterFirstDate) {
-                    return $date <= $twoYearsAfterFirstDate;
-                });
-
-                if (!empty($validDates)) {
-                    $dateValideJusquAu = min($validDates);
-                } else {
-                    $dateValideJusquAu = $oneYearAfterFirstDate;
-                    $isBeyondOneYear = true;
-                }
-            }
-        } else {
-            if ($datelangue && $datequalif) {
-                $dateValideJusquAu = min($datelangue, $datequalif);
-            } elseif ($datelangue) {
-                $dateValideJusquAu = $datelangue;
-            } elseif ($datequalif) {
-                $dateValideJusquAu = $datequalif;
-            }
-        }
-
-        // Réduire d'un jour la date finale
         if ($dateValideJusquAu) {
             $dateValideJusquAu->modify('-1 day');
             $data['valide_jusquau'] = $dateValideJusquAu->format('d/m/Y');
         } else {
             $data['valide_jusquau'] = 'Non défini';
         }
-
-        $data['is_beyond_one_year'] = $isBeyondOneYear;
 
         $data['privilegefr'] = $pilote->getPrivilegefr() ?? '';
         $data['privilegeag'] = $pilote->getPrivilegeag() ?? '';
@@ -164,7 +109,7 @@ class PdfGenerator
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $type = strtoupper($pilote->getType());
+        $type = strtoupper((string)$pilote->getType());
         $name = ucfirst($pilote->getNom());
         $filename = sprintf('%s-%s.pdf', $type, $name);
 
@@ -174,6 +119,33 @@ class PdfGenerator
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
+    }
+
+    private function calculateDateValideJusquAu(Pilote $pilote, ?\DateTime $datelangue, ?\DateTime $datequalif, ?\DateTime $firstDate): ?\DateTime
+    {
+        $dateValideJusquAu = null;
+
+        // Calculer la date limite basée sur l'âge de 65 ans
+        $dateAnniversaire65 = (clone $pilote->getDatebirth())->modify('+65 years');
+        $today = new \DateTime();
+
+        if ($dateAnniversaire65 <= $today) {
+            // Le pilote a déjà 65 ans ou plus
+            return null;
+        }
+
+        // Si le pilote approche ses 65 ans, limiter la validité à cette date
+        if ($datelangue && $datequalif) {
+            $dateValideJusquAu = min($datelangue, $datequalif, $dateAnniversaire65);
+        } elseif ($datelangue) {
+            $dateValideJusquAu = min($datelangue, $dateAnniversaire65);
+        } elseif ($datequalif) {
+            $dateValideJusquAu = min($datequalif, $dateAnniversaire65);
+        } else {
+            $dateValideJusquAu = $dateAnniversaire65;
+        }
+
+        return $dateValideJusquAu;
     }
 
     private function saveValidationHistorique(Pilote $pilote, \DateTime $dateDelivree, ?\DateTime $dateValideJusquAu): void

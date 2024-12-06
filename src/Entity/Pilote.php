@@ -88,6 +88,9 @@ class Pilote
 
 
 // Getter et Setter pour createdBy
+    #[ORM\Column(type: Types::DATE_MUTABLE , nullable: true)]
+    private ?\DateTimeInterface $datelicence = null;
+
 
     public function getCreatedBy(): ?User
     {
@@ -413,5 +416,24 @@ class Pilote
 
         return $this;
     }
+
+    public function getDatelicence(): ?DateTimeInterface
+    {
+        return $this->datelicence;
+    }
+
+    public function setDatelicence(DateTimeInterface|string|null $datelicence): static
+    {
+        if (is_string($datelicence)) {
+            $this->datelicence = DateTime::createFromFormat('Y-m-d', $datelicence) ?: null;
+        } elseif ($datelicence instanceof DateTimeInterface) {
+            $this->datelicence = $datelicence;
+        } else {
+            $this->datelicence = null;
+        }
+
+        return $this;
+    }
+
 
 }

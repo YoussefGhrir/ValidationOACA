@@ -83,19 +83,13 @@
 }
 /* custom.css */
 .card {
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Assure que la carte utilise toute la largeur de son conteneur */
+    max-width: 100%; /* Évite toute restriction de largeur maximale */
+    margin: 0 auto; /* Centre la carte dans son conteneur */
 }
 
 .card-body {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.form-group {
-    flex: 1 1 calc(50% - 10px); /* Ajuste la largeur pour deux colonnes */
-    margin: 10px;
+    padding: 2rem; /* Augmente l'espace intérieur de la carte */
 }
 
 .table {
@@ -167,9 +161,9 @@ html, body {
     border-radius: 15px; /* Coins arrondis */
     overflow: hidden; /* Évite le débordement du contenu */
 }
-    .card-body {
-        padding: 20px; /* Espacement interne */
-    }
+.card-body {
+    padding: 20px; /* Espacement interne */
+}
 /* Add this to your custom CSS file */
 .flash-message {
     transition: opacity 0.5s ease-in-out;
@@ -228,6 +222,4 @@ html, body {
     color: #dc3545; /* Rouge */
     font-size: 0.875rem; /* Taille du texte légèrement réduite */
     margin-top: 0.25rem;
-    display: block;
-    min-height: 20px;
 }

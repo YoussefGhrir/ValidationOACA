@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Form;
 
 use App\Entity\Avion;
@@ -8,12 +7,18 @@ use App\Entity\Pilote;
 use App\Validator\UniquePiloteNumero;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+// Import DateTime constraint
 
 class PiloteType extends AbstractType
 {
@@ -21,9 +26,28 @@ class PiloteType extends AbstractType
     {
         $isUpdate = $options['is_update'];
 
+        // Définir les contraintes du champ 'numero'
+        $constraints = [new NotBlank()];
+
+        // Appliquer la contrainte UniquePiloteNumero pour la création et la mise à jour (en vérifiant correctement l'unicité)
+        $constraints[] = new UniquePiloteNumero(); // Ajoute la contrainte d'unicité
+
+        $dateConstraints = [
+            new NotBlank(),
+            new DateTime(['format' => 'Y-m-d', 'message' => 'Veuillez entrer une date valide (YYYY-MM-DD).'])
+        ];
+
         $builder
             ->add('nom')
             ->add('prenom')
+            ->add('datelicence', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control datepicker form-control-custom',
+                    'placeholder' => 'YYYY-MM-DD'
+                ],
+                'label' => 'Date de naissance',
+                'constraints' => $dateConstraints,
+            ])
             ->add('datebirth', TextType::class, [
                 'attr' => [
                     'class' => 'form-control datepicker form-control-custom',
@@ -63,10 +87,7 @@ class PiloteType extends AbstractType
             ])
             ->add('numero', TextType::class, [
                 'label' => 'Numéro',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new UniquePiloteNumero(),
-                ],
+                'constraints' => $constraints,
                 'attr' => [
                     'class' => 'form-control',
                 ],
@@ -77,12 +98,8 @@ class PiloteType extends AbstractType
                     'placeholder' => 'YYYY-MM-DD'
                 ],
                 'label' => 'Date de début',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Date([
-                        'message' => 'Veuillez entrer une date valide au format YYYY-MM-DD.',
-                    ]),
-                ],
+
+                'constraints' => $dateConstraints,
             ])
             ->add('validite', TextType::class, [
                 'attr' => [
@@ -90,13 +107,8 @@ class PiloteType extends AbstractType
                     'placeholder' => 'YYYY-MM-DD'
                 ],
                 'label' => 'Date de validité',
-                'data' => (new \DateTime())->format('Y-m-d'),
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Date([
-                        'message' => 'Veuillez entrer une date valide au format YYYY-MM-DD.',
-                    ]),
-                ],
+                'data' => (new \DateTime())->format('Y-m-d'), // Conversion en chaîne de caractères
+                'constraints' => $dateConstraints,
             ])
             ->add('datequalif', TextType::class, [
                 'attr' => [
@@ -104,12 +116,7 @@ class PiloteType extends AbstractType
                     'placeholder' => 'YYYY-MM-DD'
                 ],
                 'label' => 'Date Qualification',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Date([
-                        'message' => 'Veuillez entrer une date valide au format YYYY-MM-DD.',
-                    ]),
-                ],
+                'constraints' => $dateConstraints,
             ])
             ->add('datelangue', TextType::class, [
                 'attr' => [
@@ -117,12 +124,7 @@ class PiloteType extends AbstractType
                     'placeholder' => 'YYYY-MM-DD'
                 ],
                 'label' => 'Date de langue',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Date([
-                        'message' => 'Veuillez entrer une date valide au format YYYY-MM-DD.',
-                    ]),
-                ],
+                'constraints' => $dateConstraints,
             ])
             ->add('pays')
             ->add('nationalite')
@@ -133,39 +135,39 @@ class PiloteType extends AbstractType
                     'Double / Dual' => 'Double / Dual',
                 ],
                 'constraints' => [
-                    new Assert\Choice([
+                    new Choice([
                         'choices' => ['1er pilote / PIC', '2ème pilote / Co-pilot', 'Double / Dual'],
-                        'message' => 'Veuillez choisir une option valide.',
-                    ]),
-                ],
+                        'message' => 'Veuillez choisir une option valide.'
+                    ])
+                ]
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    'ATPL' => false,
-                    'CPL' => true,
-                    'Double' => null,
+                    'ATPL' => false,  // false pour "ATPL"
+                    'CPL' => true,    // true pour "CPL"
+                    'Double' => null, // null pour "Double"
                 ],
-                'expanded' => true,
-                'multiple' => false,
-                'data' => $options['data']->getType(),
+                'expanded' => true,  // Utiliser des boutons radio
+                'multiple' => false, // Pas de sélection multiple
+                'data' => $options['data']->getType(),  // Pré-sélectionner selon la valeur actuelle du pilote
             ])
             ->add('compagnie', EntityType::class, [
                 'class' => Compagnie::class,
                 'choice_label' => 'nom',
                 'label' => 'Compagnie',
                 'placeholder' => 'Choisissez une compagnie',
-                'required' => false,
+                'required' => false,  // Optionnel
             ])
             ->add('avion', EntityType::class, [
                 'class' => Avion::class,
                 'choice_label' => 'nom',
                 'label' => 'Avion',
                 'placeholder' => 'Choisissez un avion',
-                'required' => false,
+                'required' => false,  // Optionnel
             ])
             ->add('privilegefr', TextType::class, [
                 'label' => 'Privilège Français',
-                'required' => false,
+                'required' => false, // Le champ est optionnel
                 'attr' => [
                     'class' => 'form-control form-control-custom',
                     'placeholder' => 'Privilège Français',
@@ -173,7 +175,7 @@ class PiloteType extends AbstractType
             ])
             ->add('privilegeag', TextType::class, [
                 'label' => 'Privilège Anglais',
-                'required' => false,
+                'required' => false, // Le champ est optionnel
                 'attr' => [
                     'class' => 'form-control form-control-custom',
                     'placeholder' => 'Privilège Anglais',
@@ -185,7 +187,7 @@ class PiloteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Pilote::class,
-            'default_type' => null,
+            'default_type' => null, // Aucune valeur par défaut
             'is_update' => false,
         ]);
     }
