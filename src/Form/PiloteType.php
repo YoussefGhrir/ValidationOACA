@@ -45,7 +45,7 @@ class PiloteType extends AbstractType
                     'class' => 'form-control datepicker form-control-custom',
                     'placeholder' => 'YYYY-MM-DD'
                 ],
-                'label' => 'Date de naissance',
+                'label' => 'Validité de Licence',
                 'constraints' => $dateConstraints,
             ])
             ->add('datebirth', TextType::class, [
